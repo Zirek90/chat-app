@@ -1,7 +1,7 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/src/lib/supabase";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, StyleSheet, Text, View, ImageBackground, Pressable, TextInput, AppState } from "react-native";
+import { Alert, StyleSheet, Text, View, ImageBackground, Pressable, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoginPage() {
@@ -17,8 +17,10 @@ export default function LoginPage() {
       error,
     } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) Alert.alert(error.message);
-    if (!session) Alert.alert("Please check your inbox for email verification!");
+    if (error) {
+      Alert.alert(error.message);
+      return;
+    }
     router.push("/");
     setLoading(false);
   }
@@ -61,7 +63,7 @@ export default function LoginPage() {
             <Text style={styles.buttonText}>Login</Text>
           </Pressable>
         </View>
-        <Pressable disabled={loading} onPress={() => router.replace("/signin")}>
+        <Pressable disabled={loading} onPress={() => router.push("/signup")}>
           <Text style={styles.linkText}>Don't have account yet? Sign Up!</Text>
         </Pressable>
       </SafeAreaView>
