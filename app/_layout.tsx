@@ -37,16 +37,12 @@ function InitialPage() {
 
   useEffect(() => {
     async function hideSplashScreen() {
-      if (fontsLoaded) {
+      if (fontsLoaded && !isLoading) {
         await SplashScreen.hideAsync();
       }
     }
     hideSplashScreen();
-  }, [fontsLoaded]);
-
-  if (isLoading || !fontsLoaded) {
-    return null;
-  }
+  }, [fontsLoaded, isLoading]);
 
   return (
     <View style={styles.container}>

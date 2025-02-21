@@ -1,6 +1,6 @@
 import { Text, TextInput } from "@/src/components";
 import { supabase } from "@/src/libs/supabase";
-import useThemeStore from "@/src/store/useThemeStore";
+import { useThemeStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
 import { useRouter } from "expo-router";
 import { useState } from "react";

@@ -1,4 +1,4 @@
-import useThemeStore from "@/src/store/useThemeStore";
+import { useThemeStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 
@@ -6,11 +6,7 @@ export default function ChatDashboard() {
   const { theme } = useThemeStore();
 
   return (
-    <ImageBackground
-      source={getBackgroundImage(theme, "chat_dashboard")}
-      style={styles.background}
-      resizeMode="stretch"
-    >
+    <ImageBackground source={getBackgroundImage(theme, "chat_dashboard")} style={styles.background} resizeMode="cover">
       <View style={styles.container}>
         <Text>Chat dashboard</Text>
       </View>
