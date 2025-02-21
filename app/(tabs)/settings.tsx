@@ -1,7 +1,7 @@
+import { API } from "@/src/api";
 import { Text } from "@/src/components";
 import { ThemeEnum } from "@/src/enums";
 import { useColors } from "@/src/hooks";
-import { supabase } from "@/src/libs/supabase";
 import { useThemeStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,20 +18,18 @@ export default function Settings() {
   const { avatarFallbackColor, textColor, buttonColor, buttonTextColor } = useColors();
 
   async function onSignOut() {
-    await supabase.auth.signOut();
+    await API.auth.logout();
   }
 
   useEffect(() => {
     async function fetchUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      const metadata = user?.user_metadata;
-      if (metadata) {
+      const { user_metadata } = await API.user.getUser();
+
+      if (user_metadata) {
         setUserData({
-          email: metadata.email || "",
-          avatar_url: metadata.avatar_url || null,
-          username: metadata.username || "Unknown",
+          email: user_metadata.email || "",
+          avatar_url: user_metadata.avatar_url || null,
+          username: user_metadata.username || "Unknown",
         });
       }
     }

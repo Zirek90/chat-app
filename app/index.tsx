@@ -1,5 +1,5 @@
+import { API } from "@/src/api";
 import { Text, TextInput } from "@/src/components";
-import { supabase } from "@/src/libs/supabase";
 import { useThemeStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
 import { useRouter } from "expo-router";
@@ -16,17 +16,18 @@ export default function LoginPage() {
 
   async function signInWithEmail() {
     setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      Alert.alert(error.message);
-      return;
+    try {
+      await API.auth.login({ email, password });
+      router.push("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      } else {
+        console.error("Unknown error for login", error);
+      }
+    } finally {
+      setLoading(false);
     }
-    router.push("/");
-    setLoading(false);
   }
 
   return (

@@ -1,4 +1,3 @@
-import { supabase } from "@/src/libs/supabase";
 import { useThemeStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
 import { useRouter } from "expo-router";
@@ -6,6 +5,7 @@ import { useState } from "react";
 import { Text, TextInput } from "@/src/components";
 import { Alert, StyleSheet, View, ImageBackground, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { API } from "@/src/api";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -17,27 +17,22 @@ export default function SignUpPage() {
 
   async function signUpWithEmail() {
     setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { username, avatart_url: "" },
-      },
-    });
-
-    if (error) {
-      Alert.alert(error.message);
-      return;
+    try {
+      const session = await API.auth.signup({ email, password, username });
+      if (!session) {
+        Alert.alert("Please check your inbox for email verification!");
+        return;
+      }
+      router.push("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      } else {
+        console.error("Unknown error for login", error);
+      }
+    } finally {
+      setLoading(false);
     }
-    if (!session) {
-      Alert.alert("Please check your inbox for email verification!");
-      return;
-    }
-    router.push("/");
-    setLoading(false);
   }
 
   return (

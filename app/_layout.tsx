@@ -1,10 +1,10 @@
-import { supabase } from "@/src/libs/supabase";
 import { Session } from "@supabase/supabase-js";
 import { Slot, Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, PatrickHand_400Regular } from "@expo-google-fonts/patrick-hand";
 import { StyleSheet, View } from "react-native";
+import { AuthAPI } from "@/src/api/auth";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,17 +18,12 @@ function InitialPage() {
   });
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    const unsubscribe = AuthAPI.subscribeToAuthChanges((newSession) => {
+      setSession(newSession);
       setIsLoading(false);
     });
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setIsLoading(false);
-    });
-
-    return () => authListener.subscription.unsubscribe();
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
