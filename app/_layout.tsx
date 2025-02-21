@@ -1,6 +1,6 @@
 import { supabase } from "@/src/libs/supabase";
 import { Session } from "@supabase/supabase-js";
-import { Stack, useRouter } from "expo-router";
+import { Slot, Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, PatrickHand_400Regular } from "@expo-google-fonts/patrick-hand";
@@ -11,6 +11,7 @@ SplashScreen.preventAutoHideAsync();
 function InitialPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const segments = useSegments();
   const router = useRouter();
   const [fontsLoaded] = useFonts({
     Patrick_Hand_Regular: PatrickHand_400Regular,
@@ -31,8 +32,14 @@ function InitialPage() {
   }, []);
 
   useEffect(() => {
-    if (!session) return;
-    router.push("/(chat)/chat-dashboard");
+    if (isLoading) return;
+
+    const inTabsGroup = segments[0] === "(tabs)";
+    if (session && !inTabsGroup) {
+      router.replace("/(tabs)/chat-dashboard");
+    } else if (!session) {
+      router.replace("/");
+    }
   }, [session]);
 
   useEffect(() => {
@@ -44,13 +51,17 @@ function InitialPage() {
     hideSplashScreen();
   }, [fontsLoaded, isLoading]);
 
+  if (!fontsLoaded || isLoading) {
+    return <Slot />;
+  }
+
   return (
     <View style={styles.container}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      />
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="signup" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
     </View>
   );
 }

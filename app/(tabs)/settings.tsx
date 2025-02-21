@@ -1,10 +1,10 @@
 import { Text } from "@/src/components";
-import { ThemeEnum } from "@/src/enums";
 import { useColors } from "@/src/hooks";
 import { supabase } from "@/src/libs/supabase";
 import { useThemeStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Animated, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -16,6 +16,12 @@ export default function Settings() {
     username: "",
   });
   const { avatarFallbackColor, textColor, buttonColor, buttonTextColor } = useColors();
+  const router = useRouter();
+
+  async function onSignOut() {
+    await supabase.auth.signOut();
+    router.replace("/");
+  }
 
   useEffect(() => {
     async function fetchUser() {
@@ -58,6 +64,11 @@ export default function Settings() {
           <Text style={[styles.toggleText, { color: buttonTextColor }]}>
             {theme === "grayscale" ? "Switch to Colorful" : "Switch to Grayscale"}
           </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.toggleButton, { backgroundColor: buttonColor }]} onPress={onSignOut}>
+          <Ionicons name={theme === "grayscale" ? "moon" : "sunny"} size={24} color={buttonTextColor} />
+          <Text style={[styles.toggleText, { color: buttonTextColor }]}>Sign out</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
