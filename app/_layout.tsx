@@ -1,13 +1,20 @@
-import { supabase } from "@/src/lib/supabase";
+import { supabase } from "@/src/libs/supabase";
 import { Session } from "@supabase/supabase-js";
 import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
+import { useFonts, PatrickHand_400Regular } from "@expo-google-fonts/patrick-hand";
+import { StyleSheet, View } from "react-native";
+
+SplashScreen.preventAutoHideAsync();
 
 function InitialPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [fontsLoaded] = useFonts({
+    Patrick_Hand_Regular: PatrickHand_400Regular,
+  });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -29,23 +36,35 @@ function InitialPage() {
   }, [session]);
 
   useEffect(() => {
-    if (session && !isLoading) {
-      SplashScreen.hideAsync();
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
     }
-  }, [isLoading, session]);
+    hideSplashScreen();
+  }, [fontsLoaded]);
 
-  if (isLoading) {
+  if (isLoading || !fontsLoaded) {
     return null;
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
+    <View style={styles.container}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    fontFamily: "Patrick_Hand_Regular",
+  },
+});
 
 export default function RootLayout() {
   return <InitialPage />;

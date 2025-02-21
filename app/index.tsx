@@ -1,7 +1,10 @@
-import { supabase } from "@/src/lib/supabase";
+import { Text, TextInput } from "@/src/components";
+import { supabase } from "@/src/libs/supabase";
+import useThemeStore from "@/src/store/useThemeStore";
+import { getBackgroundImage } from "@/src/utils";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, StyleSheet, Text, View, ImageBackground, Pressable, TextInput } from "react-native";
+import { Alert, StyleSheet, View, ImageBackground, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoginPage() {
@@ -9,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { theme } = useThemeStore();
 
   async function signInWithEmail() {
     setLoading(true);
@@ -26,11 +30,7 @@ export default function LoginPage() {
   }
 
   return (
-    <ImageBackground
-      source={require("../assets/app-images/grayscale/background-login.jpg")}
-      style={styles.background}
-      resizeMode="stretch"
-    >
+    <ImageBackground source={getBackgroundImage(theme, "login")} style={styles.background} resizeMode="stretch">
       <SafeAreaView style={styles.container}>
         <Text style={styles.welcomeText}>Welcome to Binatang Chat</Text>
         <View style={styles.inputContainer}>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
   welcomeText: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 50,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     color: "#333",
-    fontSize: 16,
+    fontSize: 18,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.6)",
   },
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(200, 200, 200, 0.9)",
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#333",
   },

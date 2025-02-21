@@ -1,4 +1,4 @@
-import { supabase } from "@/src/lib/supabase";
+import { supabase } from "@/src/libs/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 
