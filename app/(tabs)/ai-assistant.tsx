@@ -1,14 +1,49 @@
-import { useThemeStore } from "@/src/store";
+import { useChatStore, useThemeStore, useUserStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, View } from "react-native";
+import { Chat, MessageInterface } from "@/src/features";
+import { API } from "@/src/api";
 
 export default function AiAssistant() {
   const { theme } = useThemeStore();
+  const { messages, isTyping, addMessage, setTyping } = useChatStore();
+  const username = useUserStore((state) => state.username);
+
+  async function onSend(newMessageText: string) {
+    const newMessage: MessageInterface = {
+      id: Date.now().toString(),
+      senderType: "me",
+      senderName: username,
+      text: newMessageText,
+      timestamp: Date.now(),
+    };
+
+    addMessage(newMessage);
+    setTyping(true);
+
+    try {
+      const aiResponseText = await API.ai.sendMessageToAiAssistant([...messages, newMessage]);
+
+      const aiResponse: MessageInterface = {
+        id: Date.now().toString() + "_ai",
+        senderType: "other",
+        senderName: "AI",
+        text: aiResponseText,
+        timestamp: Date.now(),
+      };
+
+      addMessage(aiResponse);
+    } catch (error) {
+      console.error("AI response error:", error);
+    } finally {
+      setTyping(false);
+    }
+  }
 
   return (
-    <ImageBackground source={getBackgroundImage(theme, "chat_dashboard")} style={styles.background} resizeMode="cover">
+    <ImageBackground source={getBackgroundImage(theme, "ai_assistant")} style={styles.background} resizeMode="stretch">
       <View style={styles.container}>
-        <Text>Ai Assistant</Text>
+        <Chat messages={messages} mode={"ai"} onSend={onSend} isTyping={isTyping} />
       </View>
     </ImageBackground>
   );
