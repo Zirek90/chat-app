@@ -5,6 +5,9 @@ import * as SplashScreen from "expo-splash-screen";
 import { useFonts, PatrickHand_400Regular } from "@expo-google-fonts/patrick-hand";
 import { StyleSheet, View } from "react-native";
 import { AuthAPI } from "@/src/api/auth";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useUserStore } from "@/src/store";
+import { API } from "@/src/api";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -12,6 +15,7 @@ function InitialPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const segments = useSegments();
+  const { setUserData } = useUserStore();
   const router = useRouter();
   const [fontsLoaded] = useFonts({
     Patrick_Hand_Regular: PatrickHand_400Regular,
@@ -34,6 +38,24 @@ function InitialPage() {
       router.replace("/(tabs)/chat-dashboard");
     } else if (!session) {
       router.replace("/");
+    }
+  }, [session]);
+
+  useEffect(() => {
+    async function fetchUserData() {
+      const { user_metadata } = await API.user.getUser();
+      if (user_metadata) {
+        setUserData({
+          id: user_metadata.id || "",
+          email: user_metadata.email || "",
+          avatar_url: user_metadata.avatar_url || null,
+          username: user_metadata.username || "Unknown",
+        });
+      }
+    }
+
+    if (session) {
+      fetchUserData();
     }
   }, [session]);
 
@@ -69,5 +91,9 @@ const styles = StyleSheet.create({
 });
 
 export default function RootLayout() {
-  return <InitialPage />;
+  return (
+    <SafeAreaProvider>
+      <InitialPage />
+    </SafeAreaProvider>
+  );
 }
