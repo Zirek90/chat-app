@@ -24,7 +24,7 @@ export const AiAPI = {
       throw new Error("No response from AI");
     } catch (error) {
       console.error("Error communicating with AI:", error);
-      return "Oops! Something went wrong.";
+      return "Something went wrong.";
     }
   },
 };
