@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 interface AvatarUploaderProps {
-  avatarUrl: string | null;
+  avatarUrl: string | undefined;
   username: string;
   onAvatarUpdate: (newAvatar: string) => void;
 }
 
 export function AvatarUploader(props: AvatarUploaderProps) {
   const { avatarUrl, username, onAvatarUpdate } = props;
-  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(avatarUrl);
+  const [selectedAvatar, setSelectedAvatar] = useState<string | undefined>(avatarUrl);
   const { avatarFallbackColor, textColor } = useColors();
 
   useEffect(() => {

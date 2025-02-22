@@ -3,43 +3,24 @@ import { Text } from "@/src/components";
 import { AvatarUploader } from "@/src/components";
 import { ThemeEnum } from "@/src/enums";
 import { useColors } from "@/src/hooks";
-import { useThemeStore } from "@/src/store";
+import { useThemeStore, useUserStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
 import { Alert, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function Settings() {
   const { theme, toggleTheme } = useThemeStore();
-  const [userData, setUserData] = useState<{ email: string; avatar_url: string | null; username: string }>({
-    email: "",
-    avatar_url: null,
-    username: "",
-  });
+  const { email, avatar_url, username, setUserAvatar } = useUserStore();
   const { textColor, buttonColor, buttonTextColor } = useColors();
 
   async function onSignOut() {
     await API.auth.logout();
   }
 
-  useEffect(() => {
-    async function fetchUser() {
-      const { user_metadata } = await API.user.getUser();
-
-      if (user_metadata) {
-        setUserData({
-          email: user_metadata.email || "",
-          avatar_url: user_metadata.avatar_url || null,
-          username: user_metadata.username || "Unknown",
-        });
-      }
-    }
-    fetchUser();
-  }, []);
-
   async function updateUserProfile(newAvatar: string) {
     try {
       await API.user.updateProfile({ avatar_url: newAvatar });
+      setUserAvatar(newAvatar);
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert("Error", error.message);
@@ -51,14 +32,10 @@ export default function Settings() {
     <ImageBackground source={getBackgroundImage(theme, "settings")} style={styles.background} resizeMode="cover">
       <View style={styles.container}>
         <View style={styles.topSection}>
-          <AvatarUploader
-            avatarUrl={userData.avatar_url}
-            username={userData.username}
-            onAvatarUpdate={updateUserProfile}
-          />
+          <AvatarUploader avatarUrl={avatar_url} username={username} onAvatarUpdate={updateUserProfile} />
 
-          <Text style={[styles.username, { color: textColor }]}>{userData.username}</Text>
-          <Text style={[styles.email, { color: textColor }]}>{userData.email}</Text>
+          <Text style={[styles.username, { color: textColor }]}>{username}</Text>
+          <Text style={[styles.email, { color: textColor }]}>{email}</Text>
 
           <TouchableOpacity style={[styles.toggleButton, { backgroundColor: buttonColor }]} onPress={toggleTheme}>
             <Ionicons name={theme === ThemeEnum.GRAYSCALE ? "moon" : "sunny"} size={24} color={buttonTextColor} />
