@@ -18,8 +18,15 @@ export default function FindPeople() {
     async function fetchUsers() {
       try {
         const userList = (await API.user.getAllUsers(id)) as UserDataInterface[];
-        setUsers(userList);
-        setFilteredUsers(userList);
+        const usersWithAvatars = await Promise.all(
+          userList.map(async (user) => {
+            const avatar = user.avatar ? await API.storage.getAvatar("avatars", user.avatar) : null;
+            return { ...user, avatar };
+          })
+        );
+
+        setUsers(usersWithAvatars);
+        setFilteredUsers(usersWithAvatars);
       } catch (error) {
         console.error("Error fetching users:", error);
       } finally {

@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from "react-native";
 import { Text } from "../Text";
 
 interface AvatarProps {
-  avatar?: string;
+  avatar?: string | null;
   username: string;
 }
 
