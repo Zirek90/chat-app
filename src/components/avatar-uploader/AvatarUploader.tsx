@@ -1,16 +1,19 @@
 import { useColors } from "@/src/hooks";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Image, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import * as FileSystem from "expo-file-system";
 
 interface AvatarUploaderProps {
   avatarUrl: string | undefined;
+  id: string;
   username: string;
-  onAvatarUpdate: (newAvatar: string) => void;
+  onAvatarUpdate: (filePath: string, base64: string, contentType: string) => void;
+  loading: boolean;
 }
 
 export function AvatarUploader(props: AvatarUploaderProps) {
-  const { avatarUrl, username, onAvatarUpdate } = props;
+  const { avatarUrl, username, onAvatarUpdate, id, loading } = props;
   const [selectedAvatar, setSelectedAvatar] = useState<string | undefined>(avatarUrl);
   const { avatarFallbackColor, textColor } = useColors();
 
@@ -28,8 +31,21 @@ export function AvatarUploader(props: AvatarUploaderProps) {
 
     if (!result.canceled) {
       setSelectedAvatar(result.assets[0].uri);
-      onAvatarUpdate(result.assets[0].uri);
+      const img = result.assets[0];
+      const base64 = await FileSystem.readAsStringAsync(img.uri, { encoding: "base64" });
+      const filePath = `${id}-avatar.png`;
+      onAvatarUpdate(filePath, base64, "image/jpeg");
     }
+  }
+
+  if (loading) {
+    return (
+      <View style={styles.avatarContainer}>
+        <View style={[styles.avatarFallback, { backgroundColor: avatarFallbackColor }]}>
+          <ActivityIndicator size="small" color={textColor} />
+        </View>
+      </View>
+    );
   }
 
   return (

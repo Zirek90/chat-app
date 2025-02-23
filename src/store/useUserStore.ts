@@ -5,16 +5,20 @@ interface UserStore {
   id: string;
   email: string;
   username: string;
-  avatar_url: string;
+  avatar: string;
+  loading: boolean;
   setUserData: (data: UserDataInterface) => void;
-  setUserAvatar: (avatar_url: string) => void;
+  setLoading: (data: boolean) => void;
+  setUserAvatar: (avatar: string) => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
   id: "",
   username: "",
   email: "",
-  avatar_url: "",
+  avatar: "",
+  loading: false,
   setUserData: (data: UserDataInterface) => set((state) => ({ ...state, ...data })),
-  setUserAvatar: (avatar_url: string) => set((state) => ({ ...state, avatar_url })),
+  setLoading: (data: boolean) => set((state) => ({ ...state, loading: data })),
+  setUserAvatar: (avatar: string) => set((state) => ({ ...state, avatar })),
 }));

@@ -59,7 +59,7 @@ export default function FindPeople() {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handleChat(item.id)} style={styles.userItem} activeOpacity={0.7}>
-                <Avatar username={item.username} avatar={item.avatar_url} />
+                <Avatar username={item.username} avatar={item.avatar} />
                 <View style={styles.userInfo}>
                   <Text style={styles.username}>{item.username}</Text>
                 </View>

@@ -44,11 +44,12 @@ function InitialPage() {
   useEffect(() => {
     async function fetchUserData() {
       const { user_metadata } = await API.user.getUser();
+      const avatar = await API.storage.getAvatar("avatars", user_metadata.avatar);
       if (user_metadata) {
         setUserData({
           id: user_metadata.sub || "",
           email: user_metadata.email || "",
-          avatar_url: user_metadata.avatar_url || null,
+          avatar: avatar ?? null,
           username: user_metadata.username || "Unknown",
         });
       }

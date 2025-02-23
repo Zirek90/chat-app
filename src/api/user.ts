@@ -4,16 +4,18 @@ import { UserUpdateInterface } from "@/src/interfaces";
 export const UserAPI = {
   getUser: async () => {
     const { data, error } = await supabase.auth.getUser();
+
     if (error) throw error;
     return data.user;
   },
   updateProfile: async (updates: UserUpdateInterface) => {
     const { data, error } = await supabase.auth.updateUser({ data: updates });
+
     if (error) throw error;
     return data;
   },
   getAllUsers: async (currentUserId: string) => {
-    const { data, error } = await supabase.from("profiles").select("id, username, avatar_url").neq("id", currentUserId);
+    const { data, error } = await supabase.from("profiles").select("id, username, avatar").neq("id", currentUserId);
 
     if (error) throw error;
     return data;

@@ -10,21 +10,26 @@ import { Alert, ImageBackground, StyleSheet, TouchableOpacity, View } from "reac
 
 export default function Settings() {
   const { theme, toggleTheme } = useThemeStore();
-  const { email, avatar_url, username, setUserAvatar } = useUserStore();
+  const { email, avatar, username, setUserAvatar, setLoading, loading, id } = useUserStore();
   const { textColor, buttonColor, buttonTextColor } = useColors();
 
   async function onSignOut() {
     await API.auth.logout();
   }
 
-  async function updateUserProfile(newAvatar: string) {
+  async function updateUserProfile(filePath: string, base64: string, contentType: string) {
     try {
-      await API.user.updateProfile({ avatar_url: newAvatar });
-      setUserAvatar(newAvatar);
+      setLoading(true);
+      await API.user.updateProfile({ avatar: filePath });
+      await API.storage.uploadAvatar(filePath, base64, contentType);
+      const avatar = await API.storage.getAvatar("avatars", filePath);
+      setUserAvatar(avatar);
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert("Error", error.message);
       }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -32,7 +37,13 @@ export default function Settings() {
     <ImageBackground source={getBackgroundImage(theme, "settings")} style={styles.background} resizeMode="cover">
       <View style={styles.container}>
         <View style={styles.topSection}>
-          <AvatarUploader avatarUrl={avatar_url} username={username} onAvatarUpdate={updateUserProfile} />
+          <AvatarUploader
+            avatarUrl={avatar}
+            username={username}
+            onAvatarUpdate={updateUserProfile}
+            id={id}
+            loading={loading}
+          />
 
           <Text style={[styles.username, { color: textColor }]}>{username}</Text>
           <Text style={[styles.email, { color: textColor }]}>{email}</Text>

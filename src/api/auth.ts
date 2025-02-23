@@ -26,7 +26,7 @@ export const AuthAPI = {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { username, avatar_url: "" } },
+      options: { data: { username, avatar: "" } },
     });
     if (error) throw error;
     return data.session;
