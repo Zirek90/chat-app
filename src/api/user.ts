@@ -12,4 +12,10 @@ export const UserAPI = {
     if (error) throw error;
     return data;
   },
+  getAllUsers: async (currentUserId: string) => {
+    const { data, error } = await supabase.from("profiles").select("id, username, avatar_url").neq("id", currentUserId);
+
+    if (error) throw error;
+    return data;
+  },
 };

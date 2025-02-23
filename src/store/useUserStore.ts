@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { MessageInterface } from "../features";
 import { UserDataInterface } from "../interfaces";
 
 interface UserStore {

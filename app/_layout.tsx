@@ -46,7 +46,7 @@ function InitialPage() {
       const { user_metadata } = await API.user.getUser();
       if (user_metadata) {
         setUserData({
-          id: user_metadata.id || "",
+          id: user_metadata.sub || "",
           email: user_metadata.email || "",
           avatar_url: user_metadata.avatar_url || null,
           username: user_metadata.username || "Unknown",
@@ -78,6 +78,7 @@ function InitialPage() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="signup" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="find-people" options={{ title: "Find people", presentation: "modal" }} />
       </Stack>
     </View>
   );

@@ -8,6 +8,7 @@ const backgroundImages = {
     chat_dashboard: require("@/assets/app-images/grayscale/background-chat-dashboard.jpg"),
     ai_assistant: require("@/assets/app-images/grayscale/background-ai-assistant.jpg"),
     settings: require("@/assets/app-images/grayscale/background-settings.jpg"),
+    find_people: require("@/assets/app-images/grayscale/background-find-people.jpg"),
   },
   colorful: {
     login: require("@/assets/app-images/colorful/background-login.jpg"),
@@ -16,6 +17,7 @@ const backgroundImages = {
     chat_dashboard: require("@/assets/app-images/colorful/background-chat-dashboard.jpg"),
     ai_assistant: require("@/assets/app-images/colorful/background-ai-assistant.jpg"),
     settings: require("@/assets/app-images/colorful/background-settings.jpg"),
+    find_people: require("@/assets/app-images/colorful/background-find-people.jpg"),
   },
 };
 
