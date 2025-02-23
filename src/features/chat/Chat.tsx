@@ -1,19 +1,17 @@
+import { useRef } from "react";
 import { FlatList } from "react-native";
 import { Message } from "./message";
 import { MessageForm } from "./message-form";
 import { Loader } from "./loader";
 import { ChatInterface } from "./interfaces";
-import { useEffect, useRef } from "react";
 
 export function Chat(props: ChatInterface) {
   const { messages, mode, onSend, isTyping } = props;
   const flatListRef = useRef<FlatList>(null);
 
-  useEffect(() => {
-    if (messages.length > 0) {
-      flatListRef.current?.scrollToEnd({ animated: true });
-    }
-  }, [messages]);
+  function handleScrollToEnd() {
+    flatListRef.current?.scrollToEnd({ animated: true });
+  }
 
   return (
     <>
@@ -22,6 +20,8 @@ export function Chat(props: ChatInterface) {
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Message message={item} mode={mode} />}
+        onContentSizeChange={handleScrollToEnd}
+        onLayout={handleScrollToEnd}
       />
       {isTyping && <Loader />}
       <MessageForm onSend={onSend} />

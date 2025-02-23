@@ -1,4 +1,4 @@
-import { ChatModeType, SenderType } from "../types";
+import { ChatModeType } from "../types";
 
 export interface ChatInterface {
   messages: MessageInterface[];
@@ -9,7 +9,7 @@ export interface ChatInterface {
 
 export interface MessageInterface {
   id: string;
-  senderType: SenderType;
+  userId: string;
   senderName: string;
   text: string;
   timestamp: number;

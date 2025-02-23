@@ -7,12 +7,12 @@ import { API } from "@/src/api";
 export default function AiAssistant() {
   const { theme } = useThemeStore();
   const { messages, isTyping, addMessage, setTyping } = useChatStore();
-  const username = useUserStore((state) => state.username);
+  const { username, id } = useUserStore();
 
   async function onSend(newMessageText: string) {
     const newMessage: MessageInterface = {
       id: Date.now().toString(),
-      senderType: "me",
+      userId: id,
       senderName: username,
       text: newMessageText,
       timestamp: Date.now(),
@@ -26,8 +26,8 @@ export default function AiAssistant() {
 
       const aiResponse: MessageInterface = {
         id: Date.now().toString() + "_ai",
-        senderType: "other",
-        senderName: "AI",
+        userId: "ai",
+        senderName: "AI assistant",
         text: aiResponseText,
         timestamp: Date.now(),
       };

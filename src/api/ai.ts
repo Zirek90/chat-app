@@ -9,7 +9,7 @@ export const AiAPI = {
         body: JSON.stringify({
           model: "llama-3.2-3b-instruct",
           messages: messages.map((msg) => ({
-            role: msg.senderType === "me" ? "user" : "assistant",
+            role: msg.senderName === "AI assistant" ? "assistant" : "user",
             content: msg.text,
           })),
           temperature: 0.7,
@@ -18,13 +18,14 @@ export const AiAPI = {
       });
 
       const data = await response.json();
+
       if (data.choices && data.choices.length > 0) {
         return data.choices[0].message.content;
       }
       throw new Error("No response from AI");
     } catch (error) {
       console.error("Error communicating with AI:", error);
-      return "Something went wrong.";
+      return "Something went wrong with AI communication.";
     }
   },
 };
