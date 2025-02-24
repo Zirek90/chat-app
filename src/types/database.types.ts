@@ -9,7 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      ChatRooms: {
+      chatrooms: {
         Row: {
           created_at: string
           id: string
@@ -30,37 +30,34 @@ export type Database = {
         }
         Relationships: []
       }
-      Messages: {
+      messages: {
         Row: {
-          chat_room_id: string
+          content: string
           created_at: string
           id: string
           sender_id: string
-          text: string
           timestamp: string
         }
         Insert: {
-          chat_room_id?: string
+          content: string
           created_at?: string
           id?: string
           sender_id?: string
-          text: string
           timestamp?: string
         }
         Update: {
-          chat_room_id?: string
+          content?: string
           created_at?: string
           id?: string
           sender_id?: string
-          text?: string
           timestamp?: string
         }
         Relationships: [
           {
-            foreignKeyName: "Messages_chat_room_id_fkey"
-            columns: ["chat_room_id"]
-            isOneToOne: false
-            referencedRelation: "ChatRooms"
+            foreignKeyName: "messages_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "chatrooms"
             referencedColumns: ["id"]
           },
           {
