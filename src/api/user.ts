@@ -8,6 +8,12 @@ export const UserAPI = {
     if (error) throw error;
     return data.user;
   },
+  getUserProfile: async (userId: string) => {
+    const { data, error } = await supabase.from("profiles").select("id, username, avatar").eq("id", userId).single();
+
+    if (error) throw error;
+    return data;
+  },
   updateProfile: async (updates: UserUpdateInterface) => {
     const { data, error } = await supabase.auth.updateUser({ data: updates });
 

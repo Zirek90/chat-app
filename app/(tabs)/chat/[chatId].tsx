@@ -1,17 +1,49 @@
-import { Text } from "@/src/components";
-import { useThemeStore } from "@/src/store";
+import { API } from "@/src/api";
+import { Chat, MessageInterface } from "@/src/features";
+import { supabase } from "@/src/libs/supabase";
+import { useThemeStore, useUserStore } from "@/src/store";
+import { useChatStore } from "@/src/store/useChatStore";
 import { getBackgroundImage } from "@/src/utils";
 import { useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 
 export default function ChatRoom() {
   const { chatId } = useLocalSearchParams();
+  const chatRoomId = Array.isArray(chatId) ? chatId[0] : chatId;
   const { theme } = useThemeStore();
+  const { messages, addMessage, setMessages } = useChatStore();
+  const { id, username } = useUserStore();
+
+  useEffect(() => {
+    async function fetchMessages() {
+      try {
+        const msgs = await API.chat.getMessages(chatRoomId);
+
+        setMessages(msgs);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    }
+    if (chatRoomId) return;
+    fetchMessages();
+
+    const subscription = API.chat.subscribeToMessages(chatRoomId, addMessage);
+    return () => supabase.removeSubscription(subscription);
+  }, [chatRoomId]);
+
+  async function onSend(newMessageText: string) {
+    try {
+      await API.chat.sendMessage(chatRoomId, id, username, newMessageText);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  }
 
   return (
-    <ImageBackground source={getBackgroundImage(theme, "chat_dashboard")} style={styles.background} resizeMode="cover">
+    <ImageBackground source={getBackgroundImage(theme, "chat")} style={styles.background} resizeMode="cover">
       <View style={styles.container}>
-        <Text>Chat room: {chatId}</Text>
+        <Chat messages={messages} mode={"user"} isTyping={false} onSend={onSend} />
       </View>
     </ImageBackground>
   );

@@ -50,9 +50,8 @@ export default function FindPeople() {
 
     try {
       const roomId = await API.chat.getOrCreateChatroom(currentUserId, userId);
-      // const roomId = 5;
-      router.push({
-        pathname: "/chat/[chatId]",
+      router.replace({
+        pathname: "/(tabs)/chat/[chatId]",
         params: { chatId: roomId },
       });
     } catch (error) {

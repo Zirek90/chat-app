@@ -1,5 +1,7 @@
+import { ChatHeader } from "@/src/components";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
+import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 function InitialPage() {
@@ -18,9 +20,17 @@ function InitialPage() {
         }}
       />
       <Stack.Screen
-        name="[chatId]" // TODO move chat to separate directory and remove chatroom from tabbar
+        name="[chatId]"
         options={{
           title: "Chat room",
+          headerLeft: () => {
+            return (
+              <TouchableOpacity onPress={() => router.replace("/(tabs)/chat/chat-dashboard")}>
+                <Ionicons name="arrow-back" size={24} color="black" />
+              </TouchableOpacity>
+            );
+          },
+          headerTitle: () => <ChatHeader />,
         }}
       />
     </Stack>

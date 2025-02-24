@@ -14,24 +14,25 @@ export type Database = {
           created_at: string
           id: string
           name: string | null
-          participants: Json
+          participants: string[] | null
         }
         Insert: {
           created_at?: string
           id?: string
           name?: string | null
-          participants?: Json
+          participants?: string[] | null
         }
         Update: {
           created_at?: string
           id?: string
           name?: string | null
-          participants?: Json
+          participants?: string[] | null
         }
         Relationships: []
       }
       messages: {
         Row: {
+          chatroom_id: string
           content: string
           created_at: string
           id: string
@@ -39,6 +40,7 @@ export type Database = {
           timestamp: string
         }
         Insert: {
+          chatroom_id: string
           content: string
           created_at?: string
           id?: string
@@ -46,6 +48,7 @@ export type Database = {
           timestamp?: string
         }
         Update: {
+          chatroom_id?: string
           content?: string
           created_at?: string
           id?: string
@@ -53,6 +56,13 @@ export type Database = {
           timestamp?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "messages_chatroom_id_fkey"
+            columns: ["chatroom_id"]
+            isOneToOne: false
+            referencedRelation: "chatrooms"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "messages_id_fkey"
             columns: ["id"]
@@ -72,18 +82,21 @@ export type Database = {
       profiles: {
         Row: {
           avatar: string | null
+          chatrooms: string[] | null
           id: string
           updated_at: string | null
           username: string | null
         }
         Insert: {
           avatar?: string | null
+          chatrooms?: string[] | null
           id: string
           updated_at?: string | null
           username?: string | null
         }
         Update: {
           avatar?: string | null
+          chatrooms?: string[] | null
           id?: string
           updated_at?: string | null
           username?: string | null

@@ -9,7 +9,7 @@ export const AiAPI = {
         body: JSON.stringify({
           model: "llama-3.2-3b-instruct",
           messages: messages.map((msg) => ({
-            role: msg.senderName === "AI assistant" ? "assistant" : "user",
+            role: msg.sender_name === "AI assistant" ? "assistant" : "user",
             content: msg.text,
           })),
           temperature: 0.7,

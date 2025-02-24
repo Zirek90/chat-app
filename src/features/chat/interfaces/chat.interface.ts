@@ -9,9 +9,10 @@ export interface ChatInterface {
 
 export interface MessageInterface {
   id: string;
-  userId: string;
-  senderName: string;
-  text: string;
+  chatroom_id?: string;
+  sender_id: string;
+  sender_name: string;
+  content: string;
   timestamp: number;
   avatar?: string;
 }

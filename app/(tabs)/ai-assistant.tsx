@@ -1,4 +1,4 @@
-import { useChatStore, useThemeStore, useUserStore } from "@/src/store";
+import { useAiChatStore, useThemeStore, useUserStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { Chat, MessageInterface } from "@/src/features";
@@ -6,15 +6,15 @@ import { API } from "@/src/api";
 
 export default function AiAssistant() {
   const { theme } = useThemeStore();
-  const { messages, isTyping, addMessage, setTyping } = useChatStore();
+  const { messages, isTyping, addMessage, setTyping } = useAiChatStore();
   const { username, id } = useUserStore();
 
   async function onSend(newMessageText: string) {
     const newMessage: MessageInterface = {
       id: Date.now().toString(),
-      userId: id,
-      senderName: username,
-      text: newMessageText,
+      sender_id: id,
+      sender_name: username,
+      content: newMessageText,
       timestamp: Date.now(),
     };
 
@@ -26,9 +26,9 @@ export default function AiAssistant() {
 
       const aiResponse: MessageInterface = {
         id: Date.now().toString() + "_ai",
-        userId: "ai",
-        senderName: "AI assistant",
-        text: aiResponseText,
+        sender_id: "ai",
+        sender_name: "AI assistant",
+        content: aiResponseText,
         timestamp: Date.now(),
       };
 

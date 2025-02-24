@@ -1,9 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs, useRouter } from "expo-router";
-import { GestureHandlerRootView, TouchableOpacity } from "react-native-gesture-handler";
+import { Tabs } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function InitialPage() {
-  const router = useRouter();
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tabs screenOptions={{ headerShadowVisible: false }}>
@@ -19,6 +18,13 @@ function InitialPage() {
           options={{
             title: "AI Assistant",
             tabBarIcon: ({ size, color }) => <Ionicons name="chatbox-ellipses" size={size} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="games"
+          options={{
+            title: "Games",
+            tabBarIcon: ({ size, color }) => <Ionicons name="game-controller" size={size} color={color} />,
           }}
         />
         <Tabs.Screen
