@@ -35,7 +35,7 @@ function InitialPage() {
 
     const inTabsGroup = segments[0] === "(tabs)";
     if (session && !inTabsGroup) {
-      router.replace("/(tabs)/chat-dashboard");
+      router.replace("/(tabs)/chat/chat-dashboard");
     } else if (!session) {
       router.replace("/");
     }

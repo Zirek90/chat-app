@@ -3,21 +3,23 @@ import { Avatar, Text, TextInput } from "@/src/components";
 import { UserDataInterface } from "@/src/interfaces";
 import { useThemeStore, useUserStore } from "@/src/store";
 import { getBackgroundImage } from "@/src/utils";
+import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { ActivityIndicator, FlatList, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function FindPeople() {
   const { theme } = useThemeStore();
-  const id = useUserStore((state) => state.id);
+  const currentUserId = useUserStore((state) => state.id);
   const [users, setUsers] = useState<UserDataInterface[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserDataInterface[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const userList = (await API.user.getAllUsers(id)) as UserDataInterface[];
+        const userList = (await API.user.getAllUsers(currentUserId)) as UserDataInterface[];
         const usersWithAvatars = await Promise.all(
           userList.map(async (user) => {
             const avatar = user.avatar ? await API.storage.getAvatar("avatars", user.avatar) : null;
@@ -34,16 +36,32 @@ export default function FindPeople() {
       }
     }
 
-    if (!id) return;
+    if (!currentUserId) return;
     fetchUsers();
-  }, [id]);
+  }, [currentUserId]);
 
   function handleSearch(text: string) {
     setSearch(text);
     setFilteredUsers(users.filter((user) => user.username.toLowerCase().includes(text.toLowerCase())));
   }
 
-  function handleChat(userId: string) {
+  async function handleChat(userId: string) {
+    if (!currentUserId) return;
+
+    try {
+      const roomId = await API.chat.getOrCreateChatroom(currentUserId, userId);
+      // const roomId = 5;
+      router.push({
+        pathname: "/chat/[chatId]",
+        params: { chatId: roomId },
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      } else {
+        console.error("Unknown error for creating a chat room", error);
+      }
+    }
     console.log(`Start chat with ${userId}`);
   }
 
@@ -105,11 +123,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 5,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "rgba(255, 255, 255, 0.457)",
     borderRadius: 15,
     marginBottom: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 5, height: 5 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
   },

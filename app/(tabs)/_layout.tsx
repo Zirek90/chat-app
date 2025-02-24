@@ -8,15 +8,10 @@ function InitialPage() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tabs screenOptions={{ headerShadowVisible: false }}>
         <Tabs.Screen
-          name="chat-dashboard"
+          name="chat"
           options={{
-            title: "Chat Dashboard",
+            headerShown: false,
             tabBarIcon: ({ size, color }) => <Ionicons name="chatbubbles" size={size} color={color} />,
-            headerRight: () => (
-              <TouchableOpacity onPress={() => router.push("/find-people")} style={{ marginRight: 15 }}>
-                <Ionicons name="person-add" size={24} color="black" />
-              </TouchableOpacity>
-            ),
           }}
         />
         <Tabs.Screen
