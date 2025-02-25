@@ -9,10 +9,15 @@ interface CellProps {
 export function Cell(props: CellProps) {
   const { row, col } = props;
   const grid = useBattleshipStore((state) => state.grid);
-  const markShip = useBattleshipStore((state) => state.markShip);
+  const placeShip = useBattleshipStore((state) => state.placeShip);
+  const unplaceShip = useBattleshipStore((state) => state.unplaceShip);
 
   const handlePress = () => {
-    markShip(row, col);
+    if (grid[row][col]) {
+      unplaceShip(row, col);
+    } else {
+      placeShip(row, col);
+    }
   };
 
   return (

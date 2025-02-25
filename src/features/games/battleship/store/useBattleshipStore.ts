@@ -5,8 +5,8 @@ interface BattleshipStore {
   grid: boolean[][];
   ships: ShipInterface[];
   remainingShips: number;
-  markShip: (row: number, col: number) => void;
-  unmarkShip: (row: number, col: number) => void;
+  placeShip: (row: number, col: number) => void;
+  unplaceShip: (row: number, col: number) => void;
 }
 
 export const useBattleshipStore = create<BattleshipStore>((set) => ({
@@ -19,7 +19,7 @@ export const useBattleshipStore = create<BattleshipStore>((set) => ({
     { id: "3", name: "Servant Duck", size: 1, amount: 2, placed: false, cells: [] },
   ],
   remainingShips: 4,
-  markShip: (row: number, col: number) => {
+  placeShip: (row: number, col: number) => {
     set((state) => {
       const updatedGrid = [...state.grid];
       updatedGrid[row][col] = !updatedGrid[row][col];
@@ -29,8 +29,7 @@ export const useBattleshipStore = create<BattleshipStore>((set) => ({
       };
     });
   },
-
-  unmarkShip: (row: number, col: number) => {
+  unplaceShip: (row: number, col: number) => {
     set((state) => {
       const updatedGrid = [...state.grid];
       updatedGrid[row][col] = false;
