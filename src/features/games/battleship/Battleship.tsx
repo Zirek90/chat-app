@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
-import { Board } from "./board";
-import { Ships } from "./ships";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StyleSheet } from 'react-native';
+import { Board } from './board';
+import { Ships } from './ships';
 
 interface BattleshipProps {
   user1Id: string;
@@ -10,7 +10,6 @@ interface BattleshipProps {
 
 export function Battleship(props: BattleshipProps) {
   const { user1Id, user2Id } = props;
-  console.log(`User 1 ID: ${user1Id}, User 2 ID: ${user2Id}`);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -22,9 +21,9 @@ export function Battleship(props: BattleshipProps) {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
     padding: 20,
   },
 });

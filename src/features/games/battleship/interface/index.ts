@@ -1,1 +1,1 @@
-export * from "./ship.interface";
+export * from './ship.interface';

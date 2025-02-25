@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { ShipInterface } from "../interface";
+import { create } from 'zustand';
+import { ShipInterface } from '../interface';
 
 interface BattleshipStore {
   grid: boolean[][];
@@ -14,9 +14,9 @@ export const useBattleshipStore = create<BattleshipStore>((set) => ({
     .fill(false)
     .map(() => Array(10).fill(false)),
   ships: [
-    { id: "1", name: "Commander Bun", size: 4, amount: 1, placed: false, cells: [] },
-    { id: "2", name: "Lieutenant Kun", size: 2, amount: 1, placed: false, cells: [] },
-    { id: "3", name: "Servant Duck", size: 1, amount: 2, placed: false, cells: [] },
+    { id: '1', name: 'Commander Bun', size: 4, amount: 1, placed: false, cells: [] },
+    { id: '2', name: 'Lieutenant Kun', size: 2, amount: 1, placed: false, cells: [] },
+    { id: '3', name: 'Servant Duck', size: 1, amount: 2, placed: false, cells: [] },
   ],
   remainingShips: 4,
   placeShip: (row: number, col: number) => {

@@ -1,1 +1,1 @@
-export * from "./useBattleshipStore";
+export * from './useBattleshipStore';

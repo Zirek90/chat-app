@@ -1,5 +1,5 @@
-import { View, StyleSheet } from "react-native";
-import { Cell } from "./cell";
+import { View, StyleSheet } from 'react-native';
+import { Cell } from './cell';
 
 export function Board() {
   const gridSize = 10;
@@ -19,9 +19,9 @@ export function Board() {
 
 const styles = StyleSheet.create({
   board: {
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   row: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 });

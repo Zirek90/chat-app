@@ -1,4 +1,5 @@
-import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
+import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { COLORS } from '@/src/constants';
 
 export function Loader() {
   return (
@@ -11,17 +12,17 @@ export function Loader() {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: COLORS.containerBackground,
     borderRadius: 10,
-    alignSelf: "flex-start",
+    flexDirection: 'row',
     marginLeft: 10,
+    padding: 10,
   },
   text: {
-    marginLeft: 5,
-    color: "#555",
+    color: COLORS.chatLoader,
     fontSize: 14,
+    marginLeft: 5,
   },
 });

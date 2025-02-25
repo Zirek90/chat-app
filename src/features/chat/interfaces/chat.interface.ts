@@ -1,4 +1,4 @@
-import { ChatModeType } from "../types";
+import { ChatModeType } from '../types';
 
 export interface ChatInterface {
   messages: MessageInterface[];

@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { ChatAPI } from "@/src/api/chat";
-import { ChatItem } from "@/src/components";
-import { ChatRoom } from "@/src/interfaces";
-import { useThemeStore, useUserStore } from "@/src/store";
-import { getBackgroundImage } from "@/src/utils";
-import { ActivityIndicator, FlatList, ImageBackground, StyleSheet, View } from "react-native";
+import { useState, useEffect } from 'react';
+import { ActivityIndicator, FlatList, ImageBackground, StyleSheet, View } from 'react-native';
+import { ChatAPI } from '@/src/api/chat';
+import { ChatItem } from '@/src/components';
+import { ChatRoom } from '@/src/interfaces';
+import { useThemeStore, useUserStore } from '@/src/store';
+import { getBackgroundImage } from '@/src/utils';
 
 export default function ChatDashboard() {
   const { theme } = useThemeStore();
@@ -17,10 +17,9 @@ export default function ChatDashboard() {
       try {
         setLoading(true);
         const chats = await ChatAPI.getUserChatrooms(userId);
-        console.log(" chats", JSON.stringify(chats));
         setChatrooms(chats);
       } catch (error) {
-        console.error("Error fetching chatrooms:", error);
+        console.error('Error fetching chatrooms:', error);
       } finally {
         setLoading(false);
       }
@@ -29,7 +28,11 @@ export default function ChatDashboard() {
   }, [userId]);
 
   return (
-    <ImageBackground source={getBackgroundImage(theme, "chat_dashboard")} style={styles.background} resizeMode="cover">
+    <ImageBackground
+      source={getBackgroundImage(theme, 'chat_dashboard')}
+      style={styles.background}
+      resizeMode="cover"
+    >
       <View style={styles.container}>
         {loading ? (
           <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
@@ -48,8 +51,8 @@ export default function ChatDashboard() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+    height: '100%',
+    width: '100%',
   },
   container: {
     flex: 1,

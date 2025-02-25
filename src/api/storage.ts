@@ -1,5 +1,5 @@
-import { decode } from "base64-arraybuffer";
-import { supabase } from "../libs/supabase";
+import { decode } from 'base64-arraybuffer';
+import { supabase } from '../libs/supabase';
 
 export const StorageAPI = {
   uploadFile: async (bucket: string, filePath: string, base64: string, contentType: string) => {
@@ -12,7 +12,9 @@ export const StorageAPI = {
     return data;
   },
   uploadAvatar: async (filePath: string, base64: string, contentType: string) => {
-    await supabase.storage.from("avatars").upload(filePath, decode(base64), { contentType, upsert: true });
+    await supabase.storage
+      .from('avatars')
+      .upload(filePath, decode(base64), { contentType, upsert: true });
   },
   getAvatar: async (bucket: string, name: string) => {
     const { data, error } = await supabase.storage.from(bucket).createSignedUrl(name, 3600); //* 1 hour of expiration

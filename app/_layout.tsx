@@ -1,13 +1,13 @@
-import { Session } from "@supabase/supabase-js";
-import { Slot, Stack, useRouter, useSegments } from "expo-router";
-import { useEffect, useState } from "react";
-import * as SplashScreen from "expo-splash-screen";
-import { useFonts, PatrickHand_400Regular } from "@expo-google-fonts/patrick-hand";
-import { StyleSheet, View } from "react-native";
-import { AuthAPI } from "@/src/api/auth";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useUserStore } from "@/src/store";
-import { API } from "@/src/api";
+import { useEffect, useState } from 'react';
+import { useFonts, PatrickHand_400Regular } from '@expo-google-fonts/patrick-hand';
+import { Session } from '@supabase/supabase-js';
+import { Slot, Stack, useRouter, useSegments } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StyleSheet, View } from 'react-native';
+import { API } from '@/src/api';
+import { AuthAPI } from '@/src/api/auth';
+import { useUserStore } from '@/src/store';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,24 +33,24 @@ function InitialPage() {
   useEffect(() => {
     if (isLoading) return;
 
-    const inTabsGroup = segments[0] === "(tabs)";
+    const inTabsGroup = segments[0] === '(tabs)';
     if (session && !inTabsGroup) {
-      router.replace("/(tabs)/chat/chat-dashboard");
+      router.replace('/(tabs)/chat/chat-dashboard');
     } else if (!session) {
-      router.replace("/");
+      router.replace('/');
     }
-  }, [session]);
+  }, [isLoading, router, segments, session]);
 
   useEffect(() => {
     async function fetchUserData() {
       const { user_metadata } = await API.user.getUser();
-      const avatar = await API.storage.getAvatar("avatars", user_metadata.avatar);
+      const avatar = await API.storage.getAvatar('avatars', user_metadata.avatar);
       if (user_metadata) {
         setUserData({
-          id: user_metadata.sub || "",
-          email: user_metadata.email || "",
+          id: user_metadata.sub || '',
+          email: user_metadata.email || '',
           avatar: avatar ?? null,
-          username: user_metadata.username || "Unknown",
+          username: user_metadata.username || 'Unknown',
         });
       }
     }
@@ -58,7 +58,7 @@ function InitialPage() {
     if (session) {
       fetchUserData();
     }
-  }, [session]);
+  }, [session, setUserData]);
 
   useEffect(() => {
     async function hideSplashScreen() {
@@ -79,7 +79,10 @@ function InitialPage() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="signup" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="find-people" options={{ title: "Find people", presentation: "modal" }} />
+        <Stack.Screen
+          name="find-people"
+          options={{ title: 'Find people', presentation: 'modal' }}
+        />
       </Stack>
     </View>
   );
@@ -88,7 +91,7 @@ function InitialPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    fontFamily: "Patrick_Hand_Regular",
+    fontFamily: 'Patrick_Hand_Regular',
   },
 });
 

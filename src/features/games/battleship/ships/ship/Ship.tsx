@@ -1,8 +1,9 @@
-import { Text } from "@/src/components";
-import { StyleSheet, View } from "react-native";
-import { ShipInterface } from "../../interface";
+import { StyleSheet, View } from 'react-native';
+import { ShipInterface } from '../../interface';
+import { Text } from '@/src/components';
+import { COLORS } from '@/src/constants';
 
-interface ShipProps extends ShipInterface {}
+type ShipProps = ShipInterface;
 
 export function Ship(props: ShipProps) {
   const { name, size, amount, placed } = props;
@@ -17,37 +18,37 @@ export function Ship(props: ShipProps) {
 }
 
 const styles = StyleSheet.create({
+  shipAmount: {
+    color: COLORS.shipText,
+    fontSize: 12,
+  },
   shipCard: {
-    margin: 5,
+    alignItems: 'center',
+    borderColor: COLORS.white,
     borderRadius: 10,
-    padding: 7,
-    justifyContent: "center",
-    alignItems: "center",
     borderWidth: 2,
-    borderColor: "#fff",
-    shadowColor: "#000",
+    elevation: 4,
+    justifyContent: 'center',
+    margin: 5,
+    padding: 7,
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 4,
   },
   shipName: {
+    color: COLORS.shipName,
     fontSize: 15,
-    fontWeight: "bold",
-    color: "#1e1e1e",
-  },
-  shipSize: {
-    fontSize: 12,
-    color: "#575757",
-  },
-  shipAmount: {
-    fontSize: 12,
-    color: "#575757",
-  },
-  shipPlaced: {
-    backgroundColor: "rgb(139, 195, 74)",
+    fontWeight: 'bold',
   },
   shipPending: {
-    backgroundColor: "rgb(255, 235, 59)",
+    backgroundColor: COLORS.shipPending,
+  },
+  shipPlaced: {
+    backgroundColor: COLORS.shipPlaced,
+  },
+  shipSize: {
+    color: COLORS.shipText,
+    fontSize: 12,
   },
 });

@@ -1,11 +1,11 @@
-import { create } from "zustand";
-import { UserDataInterface } from "../interfaces";
+import { create } from 'zustand';
+import { UserDataInterface } from '../interfaces';
 
 interface UserStore {
   id: string;
   email: string;
   username: string;
-  avatar: string;
+  avatar?: string | null;
   loading: boolean;
   setUserData: (data: UserDataInterface) => void;
   setLoading: (data: boolean) => void;
@@ -13,10 +13,10 @@ interface UserStore {
 }
 
 export const useUserStore = create<UserStore>((set) => ({
-  id: "",
-  username: "",
-  email: "",
-  avatar: "",
+  id: '',
+  username: '',
+  email: '',
+  avatar: '',
   loading: false,
   setUserData: (data: UserDataInterface) => set((state) => ({ ...state, ...data })),
   setLoading: (data: boolean) => set((state) => ({ ...state, loading: data })),

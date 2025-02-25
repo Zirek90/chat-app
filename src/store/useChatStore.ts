@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { MessageInterface } from "../features";
+import { create } from 'zustand';
+import { MessageInterface } from '../features';
 
 interface ChatState {
   messages: MessageInterface[];

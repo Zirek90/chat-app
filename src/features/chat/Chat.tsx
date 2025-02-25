@@ -1,9 +1,9 @@
-import { useRef } from "react";
-import { FlatList } from "react-native";
-import { Message } from "./message";
-import { MessageForm } from "./message-form";
-import { Loader } from "./loader";
-import { ChatInterface } from "./interfaces";
+import { useRef } from 'react';
+import { FlatList } from 'react-native';
+import { ChatInterface } from './interfaces';
+import { Loader } from './loader';
+import { Message } from './message';
+import { MessageForm } from './message-form';
 
 export function Chat(props: ChatInterface) {
   const { messages, mode, onSend, isTyping } = props;

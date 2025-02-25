@@ -1,4 +1,4 @@
 export enum ThemeEnum {
-  GRAYSCALE = "grayscale",
-  COLORFUL = "colorful",
+  GRAYSCALE = 'grayscale',
+  COLORFUL = 'colorful',
 }

@@ -1,16 +1,17 @@
-import { useThemeStore } from "@/src/store";
-import { getBackgroundImage } from "@/src/utils";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Text, TextInput } from "@/src/components";
-import { Alert, StyleSheet, View, ImageBackground, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { API } from "@/src/api";
+import { useState } from 'react';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Alert, StyleSheet, View, ImageBackground, Pressable } from 'react-native';
+import { API } from '@/src/api';
+import { Text, TextInput } from '@/src/components';
+import { COLORS } from '@/src/constants';
+import { useThemeStore } from '@/src/store';
+import { getBackgroundImage } from '@/src/utils';
 
 export default function SignUpPage() {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { theme } = useThemeStore();
@@ -20,15 +21,15 @@ export default function SignUpPage() {
     try {
       const session = await API.auth.signup({ email, password, username });
       if (!session) {
-        Alert.alert("Please check your inbox for email verification!");
+        Alert.alert('Please check your inbox for email verification!');
         return;
       }
-      router.push("/");
+      router.push('/');
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message);
       } else {
-        console.error("Unknown error for login", error);
+        console.error('Unknown error for login', error);
       }
     } finally {
       setLoading(false);
@@ -36,7 +37,11 @@ export default function SignUpPage() {
   }
 
   return (
-    <ImageBackground source={getBackgroundImage(theme, "signup")} style={styles.background} resizeMode="stretch">
+    <ImageBackground
+      source={getBackgroundImage(theme, 'signup')}
+      style={styles.background}
+      resizeMode="stretch"
+    >
       <SafeAreaView style={styles.container}>
         <Text style={styles.welcomeText}>Welcome to Binatang Chat</Text>
         <View style={styles.inputContainer}>
@@ -77,7 +82,7 @@ export default function SignUpPage() {
             <Text style={styles.buttonText}>Sign Up</Text>
           </Pressable>
         </View>
-        <Pressable disabled={loading} onPress={() => router.push("/")}>
+        <Pressable disabled={loading} onPress={() => router.push('/')}>
           <Text style={styles.linkText}>Have account already? Log in!</Text>
         </Pressable>
       </SafeAreaView>
@@ -88,69 +93,69 @@ export default function SignUpPage() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-  },
-  welcomeText: {
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 50,
-    color: "#fff",
-    textShadowColor: "rgba(0, 0, 0, 0.5)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
-  },
-  inputContainer: {
-    width: "100%",
-    maxWidth: 300,
-    marginBottom: 20,
-  },
-  input: {
-    width: "100%",
-    padding: 12,
-    marginBottom: 12,
-    borderRadius: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    color: "#333",
-    fontSize: 18,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.6)",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    width: "100%",
-    maxWidth: 300,
+    height: '100%',
+    width: '100%',
   },
   button: {
-    flex: 1,
-    paddingVertical: 12,
+    alignItems: 'center',
+    backgroundColor: COLORS.buttonBackground,
+    borderColor: COLORS.border,
     borderRadius: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    alignItems: "center",
-    marginHorizontal: 5,
     borderWidth: 1,
-    borderColor: "#ddd",
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 12,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    maxWidth: 300,
+    width: '100%',
   },
   buttonPressed: {
-    backgroundColor: "rgba(200, 200, 200, 0.9)",
+    backgroundColor: COLORS.buttonPressed,
   },
   buttonText: {
+    color: COLORS.buttonText,
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: 'bold',
+  },
+  container: {
+    alignItems: 'center',
+    backgroundColor: COLORS.overlay,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  input: {
+    backgroundColor: COLORS.inputBackground,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    color: COLORS.inputText,
+    fontSize: 18,
+    marginBottom: 12,
+    padding: 12,
+    width: '100%',
+  },
+  inputContainer: {
+    marginBottom: 20,
+    maxWidth: 300,
+    width: '100%',
   },
   linkText: {
-    marginTop: 10,
+    color: COLORS.linkText,
     fontSize: 14,
-    color: "#004cff",
-    textDecorationLine: "underline",
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    marginTop: 10,
+    textDecorationLine: 'underline',
+  },
+  welcomeText: {
+    color: COLORS.white,
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 50,
+    textAlign: 'center',
+    textShadowColor: COLORS.shadowColor,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
 });

@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
-import { useBattleshipStore } from "../store";
-import { Ship } from "./ship";
+import { View, Text, StyleSheet } from 'react-native';
+import { useBattleshipStore } from '../store';
+import { Ship } from './ship';
+import { COLORS } from '@/src/constants';
 
 export function Ships() {
   const ships = useBattleshipStore((state) => state.ships);
@@ -18,25 +19,25 @@ export function Ships() {
   );
 }
 const styles = StyleSheet.create({
+  remainingShipsText: {
+    color: COLORS.white,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  shipsList: {
+    flexDirection: 'row',
+  },
   wrapper: {
-    backgroundColor: "rgba(54, 54, 54, 0.6)",
-    padding: 20,
+    backgroundColor: COLORS.shipWrapper,
     borderRadius: 12,
-    shadowColor: "#000",
+    elevation: 4,
+    marginBottom: 30,
+    padding: 20,
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 4,
-    marginBottom: 30,
-  },
-  remainingShipsText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  shipsList: {
-    flexDirection: "row",
   },
 });

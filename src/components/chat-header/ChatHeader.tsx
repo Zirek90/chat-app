@@ -1,8 +1,8 @@
-import { API } from "@/src/api";
-import { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
-import { Avatar, Text } from "../shared";
-import { useUserStore } from "@/src/store";
+import { useState, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Avatar, Text } from '../shared';
+import { API } from '@/src/api';
+import { useUserStore } from '@/src/store';
 
 interface ChatHeaderProps {
   chatId: string;
@@ -26,14 +26,14 @@ export function ChatHeader(props: ChatHeaderProps) {
         if (userProfile) {
           let avatar = null;
           if (userProfile.avatar) {
-            avatar = await API.storage.getAvatar("avatars", userProfile.avatar);
+            avatar = await API.storage.getAvatar('avatars', userProfile.avatar);
           }
 
           setOtherUser(userProfile?.username);
           setAvatar(avatar);
         }
       } catch (error) {
-        console.error("Error fetching chat details:", error);
+        console.error('Error fetching chat details:', error);
       }
     }
 
@@ -42,7 +42,7 @@ export function ChatHeader(props: ChatHeaderProps) {
 
   return (
     <View style={styles.container}>
-      <Avatar username={otherUser || ""} avatar={avatar} />
+      <Avatar username={otherUser || ''} avatar={avatar} />
       <Text style={styles.username}>{otherUser}</Text>
     </View>
   );
@@ -50,12 +50,12 @@ export function ChatHeader(props: ChatHeaderProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   username: {
-    marginLeft: 10,
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
+    marginLeft: 10,
   },
 });

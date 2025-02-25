@@ -1,1 +1,1 @@
-export type ChatModeType = "user" | "ai";
+export type ChatModeType = 'user' | 'ai';

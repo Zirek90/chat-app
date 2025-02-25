@@ -1,8 +1,8 @@
-import { useAiChatStore, useThemeStore, useUserStore } from "@/src/store";
-import { getBackgroundImage } from "@/src/utils";
-import { ImageBackground, StyleSheet, View } from "react-native";
-import { Chat, MessageInterface } from "@/src/features";
-import { API } from "@/src/api";
+import { ImageBackground, StyleSheet, View } from 'react-native';
+import { API } from '@/src/api';
+import { Chat, MessageInterface } from '@/src/features';
+import { useAiChatStore, useThemeStore, useUserStore } from '@/src/store';
+import { getBackgroundImage } from '@/src/utils';
 
 export default function AiAssistant() {
   const { theme } = useThemeStore();
@@ -25,25 +25,29 @@ export default function AiAssistant() {
       const aiResponseText = await API.ai.sendMessageToAiAssistant([...messages, newMessage]);
 
       const aiResponse: MessageInterface = {
-        id: Date.now().toString() + "_ai",
-        sender_id: "ai",
-        sender_name: "AI assistant",
+        id: Date.now().toString() + '_ai',
+        sender_id: 'ai',
+        sender_name: 'AI assistant',
         content: aiResponseText,
         timestamp: Date.now(),
       };
 
       addMessage(aiResponse);
     } catch (error) {
-      console.error("AI response error:", error);
+      console.error('AI response error:', error);
     } finally {
       setTyping(false);
     }
   }
 
   return (
-    <ImageBackground source={getBackgroundImage(theme, "ai_assistant")} style={styles.background} resizeMode="stretch">
+    <ImageBackground
+      source={getBackgroundImage(theme, 'ai_assistant')}
+      style={styles.background}
+      resizeMode="stretch"
+    >
       <View style={styles.container}>
-        <Chat messages={messages} mode={"ai"} onSend={onSend} isTyping={isTyping} />
+        <Chat messages={messages} mode={'ai'} onSend={onSend} isTyping={isTyping} />
       </View>
     </ImageBackground>
   );
@@ -52,12 +56,12 @@ export default function AiAssistant() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+    height: '100%',
+    width: '100%',
   },
   container: {
+    alignItems: 'center',
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
   },
 });

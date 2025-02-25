@@ -1,5 +1,6 @@
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { useBattleshipStore } from "../../store";
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useBattleshipStore } from '../../store';
+import { COLORS } from '@/src/constants';
 
 interface CellProps {
   row: number;
@@ -21,7 +22,10 @@ export function Cell(props: CellProps) {
   };
 
   return (
-    <TouchableOpacity style={[styles.cell, grid[row][col] && styles.isMarked]} onPress={handlePress}>
+    <TouchableOpacity
+      style={[styles.cell, grid[row][col] && styles.isMarked]}
+      onPress={handlePress}
+    >
       <Text>{`${String.fromCharCode(65 + row)}${col + 1}`}</Text>
     </TouchableOpacity>
   );
@@ -29,16 +33,16 @@ export function Cell(props: CellProps) {
 
 const styles = StyleSheet.create({
   cell: {
-    width: 30,
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 1,
+    alignItems: 'center',
+    backgroundColor: COLORS.cellBackground,
+    borderColor: COLORS.black,
     borderWidth: 1,
-    borderColor: "black",
-    backgroundColor: "lightgray",
+    height: 30,
+    justifyContent: 'center',
+    margin: 1,
+    width: 30,
   },
   isMarked: {
-    backgroundColor: "green",
+    backgroundColor: COLORS.isMarked,
   },
 });

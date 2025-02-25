@@ -1,3 +1,3 @@
-export * from "./Text";
-export * from "./TextInput";
-export * from "./Avatar";
+export * from './Text';
+export * from './TextInput';
+export * from './Avatar';

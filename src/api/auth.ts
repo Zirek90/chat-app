@@ -1,6 +1,6 @@
-import { supabase } from "@/src/libs/supabase";
-import { LoginCredentialsInterface, SignUpCredentialsInterface } from "@/src/interfaces";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
+import { LoginCredentialsInterface, SignUpCredentialsInterface } from '@/src/interfaces';
+import { supabase } from '@/src/libs/supabase';
 
 export const AuthAPI = {
   getSession: async () => {
@@ -26,7 +26,7 @@ export const AuthAPI = {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { username, avatar: "" } },
+      options: { data: { username, avatar: '' } },
     });
     if (error) throw error;
     return data.session;

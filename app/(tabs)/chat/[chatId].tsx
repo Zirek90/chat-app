@@ -1,12 +1,12 @@
-import { API } from "@/src/api";
-import { Chat, MessageInterface } from "@/src/features";
-import { supabase } from "@/src/libs/supabase";
-import { useThemeStore, useUserStore } from "@/src/store";
-import { useChatStore } from "@/src/store/useChatStore";
-import { getBackgroundImage } from "@/src/utils";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
+import { useEffect } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import { ImageBackground, StyleSheet, View } from 'react-native';
+import { API } from '@/src/api';
+import { Chat } from '@/src/features';
+import { supabase } from '@/src/libs/supabase';
+import { useThemeStore, useUserStore } from '@/src/store';
+import { useChatStore } from '@/src/store/useChatStore';
+import { getBackgroundImage } from '@/src/utils';
 
 export default function ChatRoom() {
   const { chatId } = useLocalSearchParams<{ chatId: string }>();
@@ -22,7 +22,7 @@ export default function ChatRoom() {
 
         setMessages(msgs);
       } catch (error) {
-        console.error("Error fetching messages:", error);
+        console.error('Error fetching messages:', error);
       }
     }
     if (!chatRoomId) return;
@@ -34,20 +34,24 @@ export default function ChatRoom() {
         supabase.removeChannel(channel);
       }
     };
-  }, [chatRoomId]);
+  }, [chatRoomId, setMessages, addMessage]);
 
   async function onSend(newMessageText: string) {
     try {
       await API.chat.sendMessage(chatRoomId, id, username, newMessageText);
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error('Error sending message:', error);
     }
   }
 
   return (
-    <ImageBackground source={getBackgroundImage(theme, "chat")} style={styles.background} resizeMode="cover">
+    <ImageBackground
+      source={getBackgroundImage(theme, 'chat')}
+      style={styles.background}
+      resizeMode="cover"
+    >
       <View style={styles.container}>
-        <Chat messages={messages} mode={"user"} isTyping={false} onSend={onSend} />
+        <Chat messages={messages} mode={'user'} isTyping={false} onSend={onSend} />
       </View>
     </ImageBackground>
   );
@@ -56,12 +60,12 @@ export default function ChatRoom() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+    height: '100%',
+    width: '100%',
   },
   container: {
+    alignItems: 'center',
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
   },
 });

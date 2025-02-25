@@ -1,8 +1,9 @@
-import { View, StyleSheet } from "react-native";
-import { MessageInterface } from "../interfaces";
-import { ChatModeType } from "../types";
-import { Text, Avatar } from "@/src/components";
-import { useUserStore } from "@/src/store";
+import { View, StyleSheet } from 'react-native';
+import { MessageInterface } from '../interfaces';
+import { ChatModeType } from '../types';
+import { Text, Avatar } from '@/src/components';
+import { COLORS } from '@/src/constants';
+import { useUserStore } from '@/src/store';
 
 interface MessageProps {
   message: MessageInterface;
@@ -13,13 +14,19 @@ export function Message(props: MessageProps) {
   const { message, mode } = props;
   const userId = useUserStore((state) => state.id);
   const isMe = message.sender_id === userId;
-  const isAI = mode === "ai";
+  const isAI = mode === 'ai';
 
   return (
     <View style={[styles.container, isMe ? styles.userContainer : styles.externalContainer]}>
-      {!isMe && <Avatar avatar={message.avatar} username={isAI ? "AI" : message.sender_name} />}
+      {!isMe && <Avatar avatar={message.avatar} username={isAI ? 'AI' : message.sender_name} />}
 
-      <View style={[styles.messageContent, styles.messageShared, isMe ? styles.userMessage : styles.externalMessage]}>
+      <View
+        style={[
+          styles.messageContent,
+          styles.messageShared,
+          isMe ? styles.userMessage : styles.externalMessage,
+        ]}
+      >
         <Text style={styles.messageText}>{message.content}</Text>
         <Text style={styles.timestamp}>{new Date(message.timestamp).toLocaleTimeString()}</Text>
       </View>
@@ -30,40 +37,40 @@ export function Message(props: MessageProps) {
 }
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
+    alignItems: 'center',
+    flexDirection: 'row',
     marginVertical: 5,
-    width: "100%",
     paddingHorizontal: 5,
-  },
-  userContainer: {
-    justifyContent: "flex-end",
+    width: '100%',
   },
   externalContainer: {
-    justifyContent: "flex-start",
-  },
-  messageShared: {
-    borderRadius: 10,
-    padding: 7,
-    maxWidth: "70%",
-  },
-  userMessage: {
-    backgroundColor: "#4caf50",
-    alignSelf: "flex-end",
+    justifyContent: 'flex-start',
   },
   externalMessage: {
-    backgroundColor: "#70adf2",
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
+    backgroundColor: COLORS.externalMessage,
   },
   messageContent: {
     flexShrink: 1,
   },
+  messageShared: {
+    borderRadius: 10,
+    maxWidth: '70%',
+    padding: 7,
+  },
   messageText: {
-    color: "#fff",
+    color: COLORS.white,
   },
   timestamp: {
+    alignSelf: 'flex-end',
+    color: COLORS.timestamp,
     fontSize: 10,
-    color: "#545454",
-    alignSelf: "flex-end",
+  },
+  userContainer: {
+    justifyContent: 'flex-end',
+  },
+  userMessage: {
+    alignSelf: 'flex-end',
+    backgroundColor: COLORS.userMessage,
   },
 });

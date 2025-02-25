@@ -1,5 +1,6 @@
-import { Image, StyleSheet, View } from "react-native";
-import { Text } from "../Text";
+import { Image, StyleSheet, View } from 'react-native';
+import { Text } from '../Text';
+import { COLORS } from '@/src/constants';
 
 interface AvatarProps {
   avatar?: string | null;
@@ -20,23 +21,23 @@ export function Avatar({ avatar, username }: AvatarProps) {
 
 const styles = StyleSheet.create({
   avatar: {
-    width: 30,
-    height: 30,
     borderRadius: 15,
+    height: 30,
     marginHorizontal: 5,
+    width: 30,
   },
   initialsContainer: {
-    width: 30,
-    height: 30,
+    alignItems: 'center',
+    backgroundColor: COLORS.initialsContainer,
     borderRadius: 15,
-    backgroundColor: "#ff9800",
-    justifyContent: "center",
-    alignItems: "center",
+    height: 30,
+    justifyContent: 'center',
     marginHorizontal: 5,
+    width: 30,
   },
   initialsText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: COLORS.white,
     fontSize: 12,
+    fontWeight: 'bold',
   },
 });

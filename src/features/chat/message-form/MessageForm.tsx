@@ -1,17 +1,18 @@
-import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-import { MessageFormInterface } from "../interfaces";
-import { TextInput } from "@/src/components";
+import { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { MessageFormInterface } from '../interfaces';
+import { TextInput } from '@/src/components';
+import { COLORS } from '@/src/constants';
 
 export function MessageForm(props: MessageFormInterface) {
   const { onSend } = props;
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
 
   function handleSend() {
     if (!input.trim()) return;
     onSend(input);
-    setInput("");
+    setInput('');
   }
 
   return (
@@ -33,25 +34,25 @@ export function MessageForm(props: MessageFormInterface) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 5,
-    margin: 5,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    alignItems: 'center',
+    backgroundColor: COLORS.containerBackground,
     borderRadius: 10,
+    flexDirection: 'row',
+    margin: 5,
+    padding: 5,
   },
   input: {
-    flex: 1,
-    padding: 10,
-    fontSize: 16,
-    minHeight: 40,
-    maxHeight: 120,
+    backgroundColor: COLORS.white,
     borderRadius: 5,
-    backgroundColor: "#fff",
+    flex: 1,
+    fontSize: 16,
+    maxHeight: 120,
+    minHeight: 40,
+    padding: 10,
   },
   sendButton: {
-    padding: 5,
-    backgroundColor: "#007AFF",
+    backgroundColor: COLORS.chatButton,
     borderRadius: 5,
+    padding: 5,
   },
 });
