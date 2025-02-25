@@ -66,24 +66,4 @@ const styles = StyleSheet.create({
     color: "#545454",
     alignSelf: "flex-end",
   },
-  avatar: {
-    width: 25,
-    height: 25,
-    borderRadius: 12.5,
-    marginHorizontal: 5,
-  },
-  aiAvatar: {
-    width: 25,
-    height: 25,
-    borderRadius: 12.5,
-    backgroundColor: "#ff9800",
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 5,
-  },
-  aiAvatarText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 12,
-  },
 });

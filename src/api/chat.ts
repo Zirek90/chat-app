@@ -2,6 +2,25 @@ import { MessageInterface } from "../features";
 import { supabase } from "../libs/supabase";
 
 export const ChatAPI = {
+  getUserChatrooms: async (userId: string) => {
+    const { data, error } = await supabase
+      .from("chatrooms")
+      .select(
+        `
+      id, 
+      participants, 
+      messages (
+        content, sender_name, timestamp
+      )
+    `
+      )
+      .contains("participants", [userId])
+      .order("timestamp", { referencedTable: "messages", ascending: false })
+      .limit(1, { referencedTable: "messages" }); // Get only the latest message
+
+    if (error) throw error;
+    return data;
+  },
   getOrCreateChatroom: async (currentUserId: string, userId: string) => {
     const ids = [currentUserId, userId];
 
@@ -59,7 +78,7 @@ export const ChatAPI = {
     return data;
   },
   subscribeToMessages: (chatId: string, callback: (message: MessageInterface) => void) => {
-    return supabase
+    const channel = supabase
       .channel(`messages-${chatId}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
         const newMessage = payload.new as MessageInterface;
@@ -68,5 +87,7 @@ export const ChatAPI = {
         }
       })
       .subscribe();
+
+    return channel;
   },
 };

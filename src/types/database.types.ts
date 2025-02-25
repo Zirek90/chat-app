@@ -37,6 +37,7 @@ export type Database = {
           created_at: string
           id: string
           sender_id: string
+          sender_name: string
           timestamp: string
         }
         Insert: {
@@ -45,6 +46,7 @@ export type Database = {
           created_at?: string
           id?: string
           sender_id?: string
+          sender_name: string
           timestamp?: string
         }
         Update: {
@@ -53,6 +55,7 @@ export type Database = {
           created_at?: string
           id?: string
           sender_id?: string
+          sender_name?: string
           timestamp?: string
         }
         Relationships: [
@@ -60,13 +63,6 @@ export type Database = {
             foreignKeyName: "messages_chatroom_id_fkey"
             columns: ["chatroom_id"]
             isOneToOne: false
-            referencedRelation: "chatrooms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
             referencedRelation: "chatrooms"
             referencedColumns: ["id"]
           },

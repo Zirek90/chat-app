@@ -3,10 +3,13 @@ import { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Avatar, Text } from "../shared";
 import { useUserStore } from "@/src/store";
-import { useLocalSearchParams } from "expo-router";
 
-export function ChatHeader() {
-  const { chatId } = useLocalSearchParams<{ chatId: string }>();
+interface ChatHeaderProps {
+  chatId: string;
+}
+
+export function ChatHeader(props: ChatHeaderProps) {
+  const { chatId } = props;
   const [otherUser, setOtherUser] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
   const currentUserId = useUserStore((state) => state.id);

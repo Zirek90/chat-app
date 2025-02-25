@@ -1,7 +1,6 @@
 import { ChatHeader } from "@/src/components";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
-import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 function InitialPage() {
@@ -21,17 +20,15 @@ function InitialPage() {
       />
       <Stack.Screen
         name="[chatId]"
-        options={{
+        options={({ route }: { route: { params?: { chatId?: string } } }) => ({
           title: "Chat room",
-          headerLeft: () => {
-            return (
-              <TouchableOpacity onPress={() => router.replace("/(tabs)/chat/chat-dashboard")}>
-                <Ionicons name="arrow-back" size={24} color="black" />
-              </TouchableOpacity>
-            );
-          },
-          headerTitle: () => <ChatHeader />,
-        }}
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          headerTitle: () => <ChatHeader chatId={route.params?.chatId!} />,
+        })}
       />
     </Stack>
   );

@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 
 export default function ChatRoom() {
-  const { chatId } = useLocalSearchParams();
+  const { chatId } = useLocalSearchParams<{ chatId: string }>();
   const chatRoomId = Array.isArray(chatId) ? chatId[0] : chatId;
   const { theme } = useThemeStore();
   const { messages, addMessage, setMessages } = useChatStore();
@@ -25,11 +25,15 @@ export default function ChatRoom() {
         console.error("Error fetching messages:", error);
       }
     }
-    if (chatRoomId) return;
+    if (!chatRoomId) return;
     fetchMessages();
 
-    const subscription = API.chat.subscribeToMessages(chatRoomId, addMessage);
-    return () => supabase.removeSubscription(subscription);
+    const channel = API.chat.subscribeToMessages(chatRoomId, addMessage);
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
   }, [chatRoomId]);
 
   async function onSend(newMessageText: string) {
