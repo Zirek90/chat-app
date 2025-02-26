@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Avatar, Text } from '../shared';
 import { COLORS } from '@/src/constants';
+import { useGetProfileWithAvatar } from '@/src/hooks';
 import { ChatRoom } from '@/src/interfaces';
 
 interface ChatRoomItemProps {
@@ -12,10 +14,11 @@ interface ChatRoomItemProps {
 export function ChatItem(props: ChatRoomItemProps) {
   const { chatRoom, currentUserId } = props;
   const router = useRouter();
-
-  const otherParticipants = chatRoom.participants?.filter((p) => p !== currentUserId) || [
-    'Unknown',
-  ];
+  const otherParticipants = useMemo(
+    () => chatRoom.participants?.filter((p) => p !== currentUserId) || [],
+    [chatRoom, currentUserId],
+  );
+  const participantProfile = useGetProfileWithAvatar(otherParticipants[0] || null);
   const lastMessage = chatRoom.messages?.[0] || { content: 'No messages yet', sender_name: '' };
 
   return (
@@ -28,10 +31,10 @@ export function ChatItem(props: ChatRoomItemProps) {
         })
       }
     >
-      <Avatar username={lastMessage.sender_name} avatar={''} />
+      <Avatar username={participantProfile?.username || ''} avatar={participantProfile?.avatar} />
       <View style={styles.chatInfo}>
         <Text style={styles.chatTitle}>
-          {otherParticipants.length > 1 ? 'Group Chat' : lastMessage?.sender_name}
+          {otherParticipants.length > 1 ? 'Group Chat' : participantProfile?.username}
         </Text>
         <Text style={styles.lastMessage}>{lastMessage?.content}</Text>
       </View>

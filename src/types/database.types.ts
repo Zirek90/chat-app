@@ -14,19 +14,19 @@ export type Database = {
           created_at: string
           id: string
           name: string | null
-          participants: string[] | null
+          participants: string[]
         }
         Insert: {
           created_at?: string
           id?: string
           name?: string | null
-          participants?: string[] | null
+          participants?: string[]
         }
         Update: {
           created_at?: string
           id?: string
           name?: string | null
-          participants?: string[] | null
+          participants?: string[]
         }
         Relationships: []
       }

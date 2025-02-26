@@ -29,6 +29,7 @@ module.exports = {
     'react-native/no-unused-styles': 'warn',
     'react-native/no-inline-styles': 'warn',
     'react-native/no-color-literals': 'warn',
+    'react-native/sort-styles': 'off',
 
     // Import rules
     'import/no-unresolved': 'off',

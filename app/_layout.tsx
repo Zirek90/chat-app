@@ -39,7 +39,8 @@ function InitialPage() {
     } else if (!session) {
       router.replace('/');
     }
-  }, [isLoading, router, segments, session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, session]);
 
   useEffect(() => {
     async function fetchUserData() {
@@ -58,7 +59,8 @@ function InitialPage() {
     if (session) {
       fetchUserData();
     }
-  }, [session, setUserData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
 
   useEffect(() => {
     async function hideSplashScreen() {

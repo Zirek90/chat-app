@@ -7,12 +7,20 @@ export interface ChatInterface {
   isTyping: boolean;
 }
 
+interface FileInterface {
+  url: string;
+  type: string;
+  name: string;
+  size: number;
+}
+
 export interface MessageInterface {
   id: string;
   chatroom_id?: string;
   sender_id: string;
   sender_name: string;
   content: string;
+  files: FileInterface[];
   timestamp: string;
   avatar?: string;
 }

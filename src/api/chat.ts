@@ -19,6 +19,7 @@ export const ChatAPI = {
       .limit(1, { referencedTable: 'messages' }); // Get only the latest message
 
     if (error) throw error;
+
     return data;
   },
   getOrCreateChatroom: async (currentUserId: string, userId: string) => {
@@ -66,6 +67,7 @@ export const ChatAPI = {
       .order('timestamp', { ascending: true });
 
     if (error) throw error;
+
     return data;
   },
   sendMessage: async (chatId: string, userId: string, username: string, content: string) => {
@@ -73,6 +75,7 @@ export const ChatAPI = {
       chatroom_id: chatId,
       sender_id: userId,
       sender_name: username,
+      files: [],
       content,
       timestamp: new Date().toISOString(),
     };

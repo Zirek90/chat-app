@@ -29,6 +29,7 @@ export default function FindPeople() {
     async function fetchUsers() {
       try {
         const userList = (await API.user.getAllUsers(currentUserId)) as UserDataInterface[];
+        // TODO move this part to separate component (renderItem part))
         const usersWithAvatars = await Promise.all(
           userList.map(async (user) => {
             const avatar = user.avatar ? await API.storage.getAvatar('avatars', user.avatar) : null;
