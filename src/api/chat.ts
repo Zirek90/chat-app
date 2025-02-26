@@ -87,7 +87,7 @@ export const ChatAPI = {
   editMessage: async (messageId: string, content: string) => {
     const { data, error } = await supabase
       .from('messages')
-      .update({ content })
+      .update({ content, edited: true })
       .eq('id', messageId)
       .select()
       .single();

@@ -63,7 +63,10 @@ export function Message(props: MessageProps) {
             </Animated.View>
           )}
           <Text style={styles.messageText}>{message.content}</Text>
-          <Text style={styles.timestamp}>{new Date(message.timestamp).toLocaleTimeString()}</Text>
+          <View style={styles.additionalInformationContainer}>
+            <Text style={styles.timestamp}>{message.edited ? 'Edited' : ''}</Text>
+            <Text style={styles.timestamp}>{new Date(message.timestamp).toLocaleTimeString()}</Text>
+          </View>
         </View>
 
         {isMe && <Avatar avatar={avatar} username={message.sender_name} />}
@@ -101,6 +104,10 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: COLORS.white,
+  },
+  additionalInformationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   timestamp: {
     alignSelf: 'flex-end',
