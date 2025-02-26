@@ -2,7 +2,7 @@
 export const COLORS = {
   shipName: '#1e1e1e',
   shipText: '#575757',
-  timestamp: '#545454',
+  timestamp: '#303030',
   chatLoader: '#555',
   messageText: '#666',
   buttonText: '#333',

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { ChatInterface } from './interfaces';
 import { Loader } from './loader';
 import { Message } from './message';
@@ -14,7 +14,7 @@ export function Chat(props: ChatInterface) {
   }
 
   return (
-    <>
+    <View style={styles.container}>
       <FlatList
         ref={flatListRef}
         data={messages}
@@ -25,6 +25,13 @@ export function Chat(props: ChatInterface) {
       />
       {isTyping && <Loader />}
       <MessageForm onSend={onSend} />
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+  },
+});
