@@ -30,9 +30,11 @@ export const COLORS = {
   colorfullButtonText: '#FF6F61',
 
   // Common colors
+  transparent: 'transparent',
   black: '#000',
   white: '#fff',
   border: '#ddd',
+  warning: '#FF9800',
   overlay: 'rgba(0, 0, 0, 0.3)',
   shadowColor: 'rgba(0, 0, 0, 0.5)',
 };

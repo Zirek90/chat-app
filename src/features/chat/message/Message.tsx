@@ -1,6 +1,10 @@
+import { MaterialIcons } from '@expo/vector-icons';
+import { GestureDetector } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 import { View, StyleSheet } from 'react-native';
 import { MessageInterface } from '../interfaces';
 import { ChatModeType } from '../types';
+import { useMessageSwipe } from './useMessageSwipe.hook';
 import { Text, Avatar } from '@/src/components';
 import { COLORS } from '@/src/constants';
 import { useGetProfileWithAvatar } from '@/src/hooks';
@@ -19,20 +23,39 @@ export function Message(props: MessageProps) {
   const isAI = mode === 'ai';
   // TODO figure out how to store participant avatars as now we do request for each message and it doesn't have sense
   const participantProfile = useGetProfileWithAvatar(message.sender_id);
+  const { animatedMessageStyle, animatedContainerStyle, animatedIconStyle, onSwipe, emptySwipe } =
+    useMessageSwipe();
 
   return (
-    <View style={[styles.container, isMe ? styles.userContainer : styles.externalContainer]}>
-      {!isMe && (
-        <Avatar avatar={participantProfile?.avatar} username={isAI ? 'AI' : message.sender_name} />
-      )}
+    <GestureDetector gesture={!isMe ? emptySwipe : onSwipe}>
+      <Animated.View
+        style={[
+          animatedContainerStyle,
+          animatedMessageStyle,
+          styles.container,
+          isMe ? styles.userContainer : styles.externalContainer,
+        ]}
+      >
+        {!isMe && (
+          <Avatar
+            avatar={participantProfile?.avatar}
+            username={isAI ? 'AI' : message.sender_name}
+          />
+        )}
 
-      <View style={[styles.messageContent, isMe ? styles.userMessage : styles.externalMessage]}>
-        <Text style={styles.messageText}>{message.content}</Text>
-        <Text style={styles.timestamp}>{new Date(message.timestamp).toLocaleTimeString()}</Text>
-      </View>
+        <View style={[styles.messageContent, isMe ? styles.userMessage : styles.externalMessage]}>
+          {isMe && (
+            <Animated.View style={[animatedIconStyle, styles.editIconContainer]}>
+              <MaterialIcons name="edit" size={24} color={COLORS.black} />
+            </Animated.View>
+          )}
+          <Text style={styles.messageText}>{message.content}</Text>
+          <Text style={styles.timestamp}>{new Date(message.timestamp).toLocaleTimeString()}</Text>
+        </View>
 
-      {isMe && <Avatar avatar={avatar} username={message.sender_name} />}
-    </View>
+        {isMe && <Avatar avatar={avatar} username={message.sender_name} />}
+      </Animated.View>
+    </GestureDetector>
   );
 }
 const styles = StyleSheet.create({
@@ -41,6 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 5,
     paddingHorizontal: 5,
+    borderRadius: 10,
   },
   externalContainer: {
     justifyContent: 'flex-start',
@@ -69,5 +93,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     color: COLORS.timestamp,
     fontSize: 10,
+  },
+  editIconContainer: {
+    position: 'absolute',
+    top: 10,
+    left: -50,
+    zIndex: 1,
   },
 });
