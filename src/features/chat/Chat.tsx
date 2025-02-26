@@ -6,7 +6,7 @@ import { Message } from './message';
 import { MessageForm } from './message-form';
 
 export function Chat(props: ChatInterface) {
-  const { messages, mode, onSend, isTyping } = props;
+  const { messages, mode, onSend, isTyping, editingMessage, onEditCancel, onEditMessage } = props;
   const flatListRef = useRef<FlatList>(null);
 
   function handleScrollToEnd() {
@@ -19,12 +19,14 @@ export function Chat(props: ChatInterface) {
         ref={flatListRef}
         data={messages}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <Message message={item} mode={mode} />}
+        renderItem={({ item }) => (
+          <Message message={item} mode={mode} onEditMessage={onEditMessage} />
+        )}
         onContentSizeChange={handleScrollToEnd}
         onLayout={handleScrollToEnd}
       />
       {isTyping && <Loader />}
-      <MessageForm onSend={onSend} />
+      <MessageForm onSend={onSend} editingMessage={editingMessage} onEditCancel={onEditCancel} />
     </View>
   );
 }

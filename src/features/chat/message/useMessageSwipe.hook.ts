@@ -1,12 +1,18 @@
 import { Gesture } from 'react-native-gesture-handler';
 import { useSharedValue, withSpring, useAnimatedStyle } from 'react-native-reanimated';
-import { TextStyle, ViewStyle } from 'react-native';
+import { ViewStyle } from 'react-native';
 import { COLORS } from '@/src/constants';
 
 export function useMessageSwipe() {
   const translateX = useSharedValue(0); // -> 50
   const backgroundColor = useSharedValue(COLORS.transparent);
   const iconDisplay = useSharedValue<ViewStyle>({ display: 'none' });
+
+  function resetSwipe() {
+    translateX.value = withSpring(8);
+    backgroundColor.value = withSpring(COLORS.transparent);
+    iconDisplay.value = { display: 'none' };
+  }
 
   const emptySwipe = Gesture.Pan();
 
@@ -46,5 +52,12 @@ export function useMessageSwipe() {
     } as ViewStyle;
   });
 
-  return { animatedMessageStyle, animatedContainerStyle, animatedIconStyle, onSwipe, emptySwipe };
+  return {
+    animatedMessageStyle,
+    animatedContainerStyle,
+    animatedIconStyle,
+    onSwipe,
+    emptySwipe,
+    resetSwipe,
+  };
 }

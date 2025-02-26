@@ -84,6 +84,17 @@ export const ChatAPI = {
     if (error) throw error;
     return data;
   },
+  editMessage: async (messageId: string, content: string) => {
+    const { data, error } = await supabase
+      .from('messages')
+      .update({ content })
+      .eq('id', messageId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
   subscribeToMessages: (chatId: string, callback: (message: MessageInterface) => void) => {
     const channel = supabase
       .channel(`messages-${chatId}`)

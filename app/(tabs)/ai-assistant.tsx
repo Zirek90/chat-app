@@ -16,6 +16,7 @@ export default function AiAssistant() {
       sender_name: username,
       content: newMessageText,
       files: [],
+      edited: false,
       timestamp: Date.now().toString(),
     };
 
@@ -31,6 +32,7 @@ export default function AiAssistant() {
         sender_name: 'AI assistant',
         content: aiResponseText,
         files: [],
+        edited: false,
         timestamp: Date.now().toString(),
       };
 

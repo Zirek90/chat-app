@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { MessageFormInterface } from '../interfaces';
@@ -6,12 +6,21 @@ import { TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
 
 export function MessageForm(props: MessageFormInterface) {
-  const { onSend } = props;
+  const { onSend, editingMessage, onEditCancel } = props;
   const [input, setInput] = useState('');
+
+  useEffect(() => {
+    setInput(editingMessage?.content || '');
+  }, [editingMessage]);
 
   function handleSend() {
     if (!input.trim()) return;
-    onSend(input);
+
+    if (editingMessage) {
+      onSend(input, editingMessage.id);
+    } else {
+      onSend(input);
+    }
     setInput('');
   }
 
@@ -25,8 +34,13 @@ export function MessageForm(props: MessageFormInterface) {
         multiline
         autoCorrect={false}
       />
+      {editingMessage && (
+        <TouchableOpacity onPress={onEditCancel} style={styles.cancelButton}>
+          <Ionicons name="close" size={24} color={COLORS.white} />
+        </TouchableOpacity>
+      )}
       <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-        <Ionicons name="send" size={24} color="white" />
+        <Ionicons name="send" size={24} color={COLORS.white} />
       </TouchableOpacity>
     </View>
   );
@@ -49,6 +63,12 @@ const styles = StyleSheet.create({
     maxHeight: 120,
     minHeight: 40,
     padding: 10,
+  },
+  cancelButton: {
+    backgroundColor: COLORS.red,
+    borderRadius: 5,
+    padding: 5,
+    marginRight: 5,
   },
   sendButton: {
     backgroundColor: COLORS.chatButton,

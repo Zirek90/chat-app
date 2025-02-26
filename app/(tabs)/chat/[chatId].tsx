@@ -12,7 +12,13 @@ export default function ChatRoom() {
   const { chatId } = useLocalSearchParams<{ chatId: string }>();
   const chatRoomId = Array.isArray(chatId) ? chatId[0] : chatId;
   const { theme } = useThemeStore();
-  const { messages, addMessage, setMessages } = useChatStore();
+  const messages = useChatStore((state) => state.messages);
+  const addMessage = useChatStore((state) => state.addMessage);
+  const setMessages = useChatStore((state) => state.setMessages);
+  const updateMessage = useChatStore((state) => state.updateMessage);
+  const editingMessage = useChatStore((state) => state.editingMessage);
+  const setEditingMessage = useChatStore((state) => state.setEditingMessage);
+
   const { id, username } = useUserStore();
 
   useEffect(() => {
@@ -36,9 +42,16 @@ export default function ChatRoom() {
     };
   }, [chatRoomId, setMessages, addMessage]);
 
-  async function onSend(newMessageText: string) {
+  async function onSend(newMessageText: string, messageId?: string) {
     try {
-      await API.chat.sendMessage(chatRoomId, id, username, newMessageText);
+      if (!messageId) {
+        await API.chat.sendMessage(chatRoomId, id, username, newMessageText);
+        return;
+      }
+
+      const updatedMessage = await API.chat.editMessage(messageId, newMessageText);
+      updateMessage(updatedMessage);
+      setEditingMessage(null);
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -51,7 +64,15 @@ export default function ChatRoom() {
       resizeMode="cover"
     >
       <View style={styles.container}>
-        <Chat messages={messages} mode={'user'} isTyping={false} onSend={onSend} />
+        <Chat
+          messages={messages}
+          mode={'user'}
+          isTyping={false}
+          onSend={onSend}
+          editingMessage={editingMessage}
+          onEditCancel={() => setEditingMessage(null)}
+          onEditMessage={setEditingMessage}
+        />
       </View>
     </ImageBackground>
   );

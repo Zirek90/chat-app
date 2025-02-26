@@ -35,6 +35,8 @@ export type Database = {
           chatroom_id: string
           content: string
           created_at: string
+          edited: boolean
+          files: Json
           id: string
           sender_id: string
           sender_name: string
@@ -44,6 +46,8 @@ export type Database = {
           chatroom_id: string
           content: string
           created_at?: string
+          edited?: boolean
+          files?: Json
           id?: string
           sender_id?: string
           sender_name: string
@@ -53,6 +57,8 @@ export type Database = {
           chatroom_id?: string
           content?: string
           created_at?: string
+          edited?: boolean
+          files?: Json
           id?: string
           sender_id?: string
           sender_name?: string

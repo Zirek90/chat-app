@@ -32,6 +32,7 @@ export const COLORS = {
   // Common colors
   transparent: 'transparent',
   black: '#000',
+  red: '#ed091c',
   white: '#fff',
   border: '#ddd',
   warning: '#FF9800',
