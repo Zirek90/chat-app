@@ -37,5 +37,6 @@ export const COLORS = {
   border: '#ddd',
   warning: '#FF9800',
   overlay: 'rgba(0, 0, 0, 0.3)',
+  colorfullOverlay: 'rgba(190, 243, 247, 0.8)',
   shadowColor: 'rgba(0, 0, 0, 0.5)',
 };

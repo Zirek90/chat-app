@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 import EmojiPicker from 'rn-emoji-keyboard';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { MessageFormInterface } from '../interfaces';
+import { AttachmentContainer } from './attachment-container';
+import { AttachmentControllers } from './attachments';
 import { TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
 
@@ -11,6 +15,16 @@ export function MessageForm(props: MessageFormInterface) {
   const [input, setInput] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
+  const [selectedFiles, setSelectedFiles] = useState<DocumentPicker.DocumentPickerAsset[]>([]);
+  const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
+
+  function handleFileSelect(file: DocumentPicker.DocumentPickerAsset) {
+    setSelectedFiles((prev) => [...prev, file]);
+  }
+
+  function handleImageSelect(image: ImagePicker.ImagePickerAsset) {
+    setSelectedImages((prev) => [...prev, image]);
+  }
 
   useEffect(() => {
     setInput(editingMessage?.content || '');
@@ -36,11 +50,26 @@ export function MessageForm(props: MessageFormInterface) {
     setCursorPosition(cursorPosition + emoji.length);
   }
 
+  function removeAttachment(index: number, type: 'file' | 'image') {
+    if (type === 'file') {
+      setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.iconButton}>
-        <MaterialIcons name="attach-file" size={24} color={COLORS.black} />
-      </TouchableOpacity>
+      <AttachmentContainer
+        files={selectedFiles}
+        images={selectedImages}
+        onRemove={removeAttachment}
+      />
+
+      <AttachmentControllers
+        handleFileSelect={handleFileSelect}
+        handleImageSelect={handleImageSelect}
+      />
 
       <TextInput
         style={styles.input}
@@ -55,16 +84,16 @@ export function MessageForm(props: MessageFormInterface) {
         onPress={() => setShowEmojiPicker(!showEmojiPicker)}
         style={styles.iconButton}
       >
-        <Ionicons name="happy-outline" size={24} color={COLORS.black} />
+        <Ionicons name="happy-outline" size={20} color={COLORS.black} />
       </TouchableOpacity>
 
       {editingMessage && (
         <TouchableOpacity onPress={onEditCancel} style={styles.cancelButton}>
-          <Ionicons name="close" size={24} color={COLORS.white} />
+          <Ionicons name="close" size={20} color={COLORS.white} />
         </TouchableOpacity>
       )}
       <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-        <Ionicons name="send" size={24} color={COLORS.white} />
+        <Ionicons name="send" size={20} color={COLORS.white} />
       </TouchableOpacity>
       <EmojiPicker
         onEmojiSelected={(emojiObject) => handleEmojiSelect(emojiObject.emoji)}
