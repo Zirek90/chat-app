@@ -8,7 +8,7 @@ export default function BattleShipGame() {
 
   return (
     <ImageBackground
-      source={getBackgroundImage(theme, 'chat_dashboard')}
+      source={getBackgroundImage(theme, 'battleship')}
       style={styles.background}
       resizeMode="cover"
     >

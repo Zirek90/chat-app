@@ -9,6 +9,7 @@ const backgroundImages = {
     ai_assistant: require('@/assets/app-images/grayscale/background-ai-assistant.jpg'),
     settings: require('@/assets/app-images/grayscale/background-settings.jpg'),
     find_people: require('@/assets/app-images/grayscale/background-find-people.jpg'),
+    battleship: require('@/assets/app-images/grayscale/background-battleship.jpg'),
   },
   colorful: {
     login: require('@/assets/app-images/colorful/background-login.jpg'),
@@ -18,6 +19,7 @@ const backgroundImages = {
     ai_assistant: require('@/assets/app-images/colorful/background-ai-assistant.jpg'),
     settings: require('@/assets/app-images/colorful/background-settings.jpg'),
     find_people: require('@/assets/app-images/colorful/background-find-people.jpg'),
+    battleship: require('@/assets/app-images/colorful/background-battleship.jpg'),
   },
 };
 
