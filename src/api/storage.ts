@@ -11,18 +11,37 @@ export const StorageAPI = {
     if (error) throw error;
     return data;
   },
+  getFileUrl: async (bucket: string, filePath: string) => {
+    const { data, error } = await supabase.storage.from(bucket).createSignedUrl(filePath, 3600);
+    if (error) throw error;
+    return data.signedUrl;
+  },
+  removeFile: async (bucket: string, name: string) => {
+    await supabase.storage.from(bucket).remove([name]);
+  },
   uploadAvatar: async (filePath: string, base64: string, contentType: string) => {
     await supabase.storage
       .from('avatars')
       .upload(filePath, decode(base64), { contentType, upsert: true });
   },
   getAvatar: async (bucket: string, name: string) => {
-    const { data, error } = await supabase.storage.from(bucket).createSignedUrl(name, 3600); //* 1 hour of expiration
+    const { data, error } = await supabase.storage.from(bucket).createSignedUrl(name, 3600); //* 1h
     if (error) throw error;
 
     return data.signedUrl;
   },
-  removeFile: async (bucket: string, name: string) => {
-    await supabase.storage.from(bucket).remove([name]);
+  addFileAccess: async (chatroomId: string, files: { path: string }[], participants: string[]) => {
+    const accessRecords = participants
+      .map((userId) =>
+        files.map((file) => ({
+          chatroom_id: chatroomId,
+          file_path: file.path,
+          user_id: userId,
+        })),
+      )
+      .flat();
+
+    const { error } = await supabase.from('file_access').insert(accessRecords);
+    if (error) console.error('Error adding file access:', error);
   },
 };
