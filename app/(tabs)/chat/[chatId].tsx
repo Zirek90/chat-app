@@ -3,9 +3,11 @@ import { useLocalSearchParams } from 'expo-router';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { API } from '@/src/api';
 import { Chat } from '@/src/features';
+import { processAttachments } from '@/src/features/chat/utils';
 import { supabase } from '@/src/libs/supabase';
 import { useThemeStore, useUserStore } from '@/src/store';
 import { useChatStore } from '@/src/store/useChatStore';
+import { FileType, ImageType } from '@/src/types';
 import { getBackgroundImage } from '@/src/utils';
 
 export default function ChatRoom() {
@@ -42,16 +44,31 @@ export default function ChatRoom() {
     };
   }, [chatRoomId, setMessages, addMessage]);
 
-  async function onSend(newMessageText: string, messageId?: string) {
+  async function onSend(
+    newMessageText: string,
+    selectedFiles: FileType[] = [],
+    selectedImages: ImageType[] = [],
+    messageId?: string,
+  ) {
+    const uploadedFiles = await processAttachments(
+      'chat-files',
+      selectedFiles,
+      'application/octet-stream',
+    );
+    const uploadedImages = await processAttachments('chat-images', selectedImages, 'image/jpeg');
+    const allAttachments = [...uploadedFiles, ...uploadedImages];
+
     try {
-      if (!messageId) {
-        await API.chat.sendMessage(chatRoomId, id, username, newMessageText);
+      if (messageId) {
+        const updatedMessage = await API.chat.editMessage(messageId, newMessageText);
+        updateMessage(updatedMessage);
+        setEditingMessage(null);
         return;
       }
+      await API.chat.sendMessage(chatRoomId, id, username, newMessageText, allAttachments);
 
-      const updatedMessage = await API.chat.editMessage(messageId, newMessageText);
-      updateMessage(updatedMessage);
-      setEditingMessage(null);
+      const participants = await API.chat.getChatParticipants(chatRoomId);
+      await API.storage.addFileAccess(chatRoomId, allAttachments, participants);
     } catch (error) {
       console.error('Error sending message:', error);
     }

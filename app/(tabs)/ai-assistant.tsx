@@ -51,7 +51,15 @@ export default function AiAssistant() {
       resizeMode="stretch"
     >
       <View style={styles.container}>
-        <Chat messages={messages} mode={'ai'} onSend={onSend} isTyping={isTyping} />
+        <Chat
+          messages={messages}
+          mode={'ai'}
+          onSend={onSend}
+          isTyping={isTyping}
+          onEditCancel={() => {}}
+          onEditMessage={() => {}}
+          editingMessage={null}
+        />
       </View>
     </ImageBackground>
   );

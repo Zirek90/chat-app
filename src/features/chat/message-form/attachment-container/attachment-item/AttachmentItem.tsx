@@ -1,6 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import * as DocumentPicker from 'expo-document-picker';
-import * as ImagePicker from 'expo-image-picker';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -10,9 +8,10 @@ import Animated, {
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Text } from '@/src/components';
 import { COLORS } from '@/src/constants';
+import { FileType, ImageType } from '@/src/types';
 
 interface AttachmentItemProps {
-  item: DocumentPicker.DocumentPickerAsset | ImagePicker.ImagePickerAsset;
+  item: FileType | ImageType;
   onRemove: () => void;
   type: 'file' | 'image';
 }
@@ -38,7 +37,7 @@ export function AttachmentItem(props: AttachmentItemProps) {
   return (
     <Animated.View style={[styles.attachment, animatedStyle]}>
       {type === 'file' ? (
-        <Text style={styles.fileName}>{(item as DocumentPicker.DocumentPickerAsset).name}</Text>
+        <Text style={styles.fileName}>{(item as FileType).name}</Text>
       ) : (
         <Image source={{ uri: item.uri }} style={styles.attachmentPreview} />
       )}

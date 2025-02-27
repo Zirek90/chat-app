@@ -1,17 +1,15 @@
 import React from 'react';
-import * as DocumentPicker from 'expo-document-picker';
-import * as ImagePicker from 'expo-image-picker';
 import { View, StyleSheet } from 'react-native';
 import { AttachmentItem } from './attachment-item';
-import { COLORS } from '@/src/constants';
+import { FileType, ImageType } from '@/src/types';
 
 export function AttachmentContainer({
   files,
   images,
   onRemove,
 }: {
-  files: DocumentPicker.DocumentPickerAsset[];
-  images: ImagePicker.ImagePickerAsset[];
+  files: FileType[];
+  images: ImageType[];
   onRemove: (index: number, type: 'file' | 'image') => void;
 }) {
   if (!files.length && !images.length) {

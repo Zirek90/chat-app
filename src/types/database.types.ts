@@ -30,6 +30,30 @@ export type Database = {
         }
         Relationships: []
       }
+      file_access: {
+        Row: {
+          chatroom_id: string
+          created_at: string | null
+          file_path: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          chatroom_id: string
+          created_at?: string | null
+          file_path: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          chatroom_id?: string
+          created_at?: string | null
+          file_path?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           chatroom_id: string

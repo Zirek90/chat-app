@@ -4,9 +4,10 @@ import Animated from 'react-native-reanimated';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { MessageInterface } from '../interfaces';
 import { ChatModeType } from '../types';
+import { Attachments } from './attachments';
 import { useMessageSwipe } from './useMessageSwipe.hook';
-import { Text, Avatar } from '@/src/components';
 import { COLORS } from '@/src/constants';
+import { Text, Avatar } from '@/src/components';
 import { useGetProfileWithAvatar } from '@/src/hooks';
 import { useUserStore } from '@/src/store';
 
@@ -38,7 +39,7 @@ export function Message(props: MessageProps) {
     resetSwipe();
   }
   return (
-    <GestureDetector gesture={!isMe ? emptySwipe : onSwipe}>
+    <GestureDetector gesture={!isMe || message.files.length ? emptySwipe : onSwipe}>
       <Animated.View
         style={[
           animatedContainerStyle,
@@ -62,6 +63,8 @@ export function Message(props: MessageProps) {
               </TouchableOpacity>
             </Animated.View>
           )}
+
+          <Attachments files={message.files} />
           <Text style={styles.messageText}>{message.content}</Text>
           <View style={styles.additionalInformationContainer}>
             <Text style={styles.timestamp}>{message.edited ? 'Edited' : ''}</Text>

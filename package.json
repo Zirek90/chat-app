@@ -8,7 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "eslint ./app ./src --ext .ts,.tsx",
-    "lint:fix": "eslint ./app ./src --ext .ts,.tsx --fix"
+    "lint:fix": "eslint ./app ./src --ext .ts,.tsx --fix",
+    "ts": "tsc --noEmit"
   },
   "dependencies": {
     "@expo-google-fonts/patrick-hand": "^0.2.3",
@@ -22,6 +23,7 @@
     "expo": "~52.0.36",
     "expo-blur": "~14.0.3",
     "expo-constants": "~17.0.6",
+    "expo-document-picker": "~13.0.3",
     "expo-file-system": "~18.0.11",
     "expo-font": "~13.0.4",
     "expo-haptics": "~14.0.1",
@@ -44,8 +46,7 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "rn-emoji-keyboard": "^1.7.0",
-    "zustand": "^5.0.3",
-    "expo-document-picker": "~13.0.3"
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

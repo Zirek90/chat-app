@@ -3,10 +3,11 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '@/src/constants';
+import { FileType, ImageType } from '@/src/types';
 
 interface AttachmentsProps {
-  handleFileSelect: (file: DocumentPicker.DocumentPickerAsset) => void;
-  handleImageSelect: (image: ImagePicker.ImagePickerAsset) => void;
+  handleFileSelect: (file: FileType) => void;
+  handleImageSelect: (image: ImageType) => void;
 }
 
 export function AttachmentControllers(props: AttachmentsProps) {
@@ -27,6 +28,7 @@ export function AttachmentControllers(props: AttachmentsProps) {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images', 'videos'],
         allowsEditing: false,
+        aspect: [1, 1],
         quality: 1,
       });
 

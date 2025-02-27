@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import * as DocumentPicker from 'expo-document-picker';
-import * as ImagePicker from 'expo-image-picker';
 import EmojiPicker from 'rn-emoji-keyboard';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { MessageFormInterface } from '../interfaces';
@@ -9,20 +7,21 @@ import { AttachmentContainer } from './attachment-container';
 import { AttachmentControllers } from './attachments';
 import { TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
+import { FileType, ImageType } from '@/src/types';
 
 export function MessageForm(props: MessageFormInterface) {
   const { onSend, editingMessage, onEditCancel } = props;
   const [input, setInput] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
-  const [selectedFiles, setSelectedFiles] = useState<DocumentPicker.DocumentPickerAsset[]>([]);
-  const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<FileType[]>([]);
+  const [selectedImages, setSelectedImages] = useState<ImageType[]>([]);
 
-  function handleFileSelect(file: DocumentPicker.DocumentPickerAsset) {
+  function handleFileSelect(file: FileType) {
     setSelectedFiles((prev) => [...prev, file]);
   }
 
-  function handleImageSelect(image: ImagePicker.ImagePickerAsset) {
+  function handleImageSelect(image: ImageType) {
     setSelectedImages((prev) => [...prev, image]);
   }
 
@@ -34,10 +33,12 @@ export function MessageForm(props: MessageFormInterface) {
     if (!input.trim()) return;
 
     if (editingMessage) {
-      onSend(input, editingMessage.id);
+      onSend(input, selectedFiles, selectedImages, editingMessage.id);
     } else {
-      onSend(input);
+      onSend(input, selectedFiles, selectedImages);
     }
+    setSelectedFiles([]);
+    setSelectedImages([]);
     setInput('');
   }
 

@@ -1,4 +1,5 @@
 import { MessageInterface } from '../features';
+import { StorageAPI } from './storage';
 import { supabase } from '../libs/supabase';
 
 export const ChatAPI = {
@@ -68,14 +69,39 @@ export const ChatAPI = {
 
     if (error) throw error;
 
-    return data;
+    // TODO figure out how to avoid unknown
+    const messagesWithUrls = await Promise.all(
+      (data as unknown as MessageInterface[]).map(async (message) => {
+        if (!message.files) return message;
+
+        const filesWithUrls = await Promise.all(
+          message.files.map(async (file) => {
+            const signedUrl = await StorageAPI.getFileUrl(
+              file.type === 'image' ? 'chat-images' : 'chat-files',
+              file.path,
+            );
+            return { ...file, url: signedUrl };
+          }),
+        );
+
+        return { ...message, files: filesWithUrls };
+      }),
+    );
+
+    return messagesWithUrls;
   },
-  sendMessage: async (chatId: string, userId: string, username: string, content: string) => {
+  sendMessage: async (
+    chatId: string,
+    userId: string,
+    username: string,
+    content: string,
+    attachments: { type: string; path: string }[],
+  ) => {
     const newMessage = {
       chatroom_id: chatId,
       sender_id: userId,
       sender_name: username,
-      files: [],
+      files: attachments,
       content,
       timestamp: new Date().toISOString(),
     };
@@ -93,7 +119,8 @@ export const ChatAPI = {
       .single();
 
     if (error) throw error;
-    return data;
+    // TODO figure out how to avoid unknown
+    return data as unknown as MessageInterface;
   },
   subscribeToMessages: (chatId: string, callback: (message: MessageInterface) => void) => {
     const channel = supabase
