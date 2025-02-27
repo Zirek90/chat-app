@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Avatar, Text } from '../shared';
-import { API } from '@/src/api';
+import { API } from '@/src/api/api';
 import { useGetProfileWithAvatar } from '@/src/hooks';
 import { useUserStore } from '@/src/store';
 

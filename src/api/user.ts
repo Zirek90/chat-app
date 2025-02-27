@@ -20,7 +20,7 @@ export const UserAPI = {
 
     let avatar = null;
     if (data.avatar) {
-      avatar = await StorageAPI.getAvatar('avatars', data.avatar);
+      avatar = await StorageAPI.getAvatar(data.avatar);
     }
     return { ...data, avatar };
   },

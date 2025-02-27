@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { API } from '@/src/api';
+import { API } from '@/src/api/api';
 import { Avatar, Text, TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
 import { UserDataInterface } from '@/src/interfaces';
@@ -32,7 +32,7 @@ export default function FindPeople() {
         // TODO move this part to separate component (renderItem part))
         const usersWithAvatars = await Promise.all(
           userList.map(async (user) => {
-            const avatar = user.avatar ? await API.storage.getAvatar('avatars', user.avatar) : null;
+            const avatar = user.avatar ? await API.storage.getAvatar(user.avatar) : null;
             return { ...user, avatar };
           }),
         );

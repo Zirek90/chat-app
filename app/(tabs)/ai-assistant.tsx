@@ -1,5 +1,5 @@
 import { ImageBackground, StyleSheet, View } from 'react-native';
-import { API } from '@/src/api';
+import { API } from '@/src/api/api';
 import { Chat, MessageInterface } from '@/src/features';
 import { useAiChatStore, useThemeStore, useUserStore } from '@/src/store';
 import { getBackgroundImage } from '@/src/utils';

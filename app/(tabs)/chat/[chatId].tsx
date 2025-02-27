@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { ImageBackground, StyleSheet, View } from 'react-native';
-import { API } from '@/src/api';
+import { API } from '@/src/api/api';
 import { Chat } from '@/src/features';
 import { processAttachments } from '@/src/features/chat/utils';
 import { supabase } from '@/src/libs/supabase';
@@ -24,6 +24,8 @@ export default function ChatRoom() {
   const { id, username } = useUserStore();
 
   useEffect(() => {
+    if (!chatRoomId) return;
+
     async function fetchMessages() {
       try {
         const msgs = await API.chat.getMessages(chatRoomId);
@@ -33,16 +35,17 @@ export default function ChatRoom() {
         console.error('Error fetching messages:', error);
       }
     }
-    if (!chatRoomId) return;
     fetchMessages();
+  }, [chatRoomId, setMessages, addMessage]);
 
+  useEffect(() => {
     const channel = API.chat.subscribeToMessages(chatRoomId, addMessage);
     return () => {
       if (channel) {
         supabase.removeChannel(channel);
       }
     };
-  }, [chatRoomId, setMessages, addMessage]);
+  }, [chatRoomId, addMessage]);
 
   async function onSend(
     newMessageText: string,

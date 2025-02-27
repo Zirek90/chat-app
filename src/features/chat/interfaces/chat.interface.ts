@@ -1,11 +1,11 @@
-import { ChatModeType, FileType } from '../types';
-import { ImageType, FileType as FileItemType } from '@/src/types';
+import { ChatModeType, AttachedFileType } from '../types';
+import { ImageType, FileType } from '@/src/types';
 
 export interface ChatInterface {
   messages: MessageInterface[];
   onSend: (
     message: string,
-    selectedFiles: FileItemType[],
+    selectedFiles: FileType[],
     selectedImages: ImageType[],
     messageId?: string,
   ) => void;
@@ -18,7 +18,7 @@ export interface ChatInterface {
 
 export interface MessageFile {
   path: string;
-  type: FileType;
+  type: AttachedFileType;
   url?: string;
 }
 
@@ -37,7 +37,7 @@ export interface MessageInterface {
 export interface MessageFormInterface {
   onSend: (
     message: string,
-    selectedFiles: FileItemType[],
+    selectedFiles: FileType[],
     selectedImages: ImageType[],
     messageId?: string,
   ) => void;

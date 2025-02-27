@@ -24,7 +24,7 @@ export function Attachments(props: AttachmentsProps) {
     return null;
   }
 
-  return files?.map((file, index) =>
+  return files.map((file, index) =>
     file.type === 'image' ? (
       <Image key={index} source={{ uri: file.url }} style={styles.imagePreview} />
     ) : (

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Alert, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { API } from '@/src/api';
+import { API } from '@/src/api/api';
 import { Text } from '@/src/components';
 import { AvatarUploader } from '@/src/components';
 import { COLORS } from '@/src/constants';
@@ -23,7 +23,7 @@ export default function Settings() {
       setLoading(true);
       await API.user.updateProfile({ avatar: filePath });
       await API.storage.uploadAvatar(filePath, base64, contentType);
-      const avatar = await API.storage.getAvatar('avatars', filePath);
+      const avatar = await API.storage.getAvatar(filePath);
       setUserAvatar(avatar);
     } catch (error) {
       if (error instanceof Error) {

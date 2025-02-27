@@ -1,5 +1,5 @@
 import * as FileSystem from 'expo-file-system';
-import { API } from '@/src/api';
+import { API } from '@/src/api/api';
 import { FileType, ImageType } from '@/src/types';
 
 export async function processAttachments(

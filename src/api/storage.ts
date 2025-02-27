@@ -24,8 +24,8 @@ export const StorageAPI = {
       .from('avatars')
       .upload(filePath, decode(base64), { contentType, upsert: true });
   },
-  getAvatar: async (bucket: string, name: string) => {
-    const { data, error } = await supabase.storage.from(bucket).createSignedUrl(name, 3600); //* 1h
+  getAvatar: async (name: string) => {
+    const { data, error } = await supabase.storage.from('avatars').createSignedUrl(name, 3600); //* 1h
     if (error) throw error;
 
     return data.signedUrl;

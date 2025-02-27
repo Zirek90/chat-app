@@ -5,6 +5,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { MessageFormInterface } from '../interfaces';
 import { AttachmentContainer } from './attachment-container';
 import { AttachmentControllers } from './attachments';
+import { AttachedFileType } from '../types';
 import { TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
 import { FileType, ImageType } from '@/src/types';
@@ -51,7 +52,7 @@ export function MessageForm(props: MessageFormInterface) {
     setCursorPosition(cursorPosition + emoji.length);
   }
 
-  function removeAttachment(index: number, type: 'file' | 'image') {
+  function removeAttachment(index: number, type: AttachedFileType) {
     if (type === 'file') {
       setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
     } else {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Alert, StyleSheet, View, ImageBackground, Pressable } from 'react-native';
-import { API } from '@/src/api';
+import { API } from '@/src/api/api';
 import { Text, TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
 import { useThemeStore } from '@/src/store';

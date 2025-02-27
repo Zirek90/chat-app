@@ -6,8 +6,8 @@ import { MessageInterface } from '../interfaces';
 import { ChatModeType } from '../types';
 import { Attachments } from './attachments';
 import { useMessageSwipe } from './useMessageSwipe.hook';
-import { COLORS } from '@/src/constants';
 import { Text, Avatar } from '@/src/components';
+import { COLORS } from '@/src/constants';
 import { useGetProfileWithAvatar } from '@/src/hooks';
 import { useUserStore } from '@/src/store';
 
