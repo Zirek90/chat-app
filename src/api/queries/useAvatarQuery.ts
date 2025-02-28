@@ -6,7 +6,6 @@ export function useAvatarQuery(name: string) {
   return useQuery({
     queryKey: [QUERY_KEYS.AVATAR, name],
     queryFn: async () => API.storage.getAvatar(name),
-    staleTime: 60 * 60 * 1000,
     enabled: Boolean(name),
   });
 }

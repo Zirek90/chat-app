@@ -6,6 +6,5 @@ export function useSessionQuery() {
   return useQuery({
     queryKey: [QUERY_KEYS.SESSION],
     queryFn: API.auth.getSession,
-    staleTime: 60 * 60 * 1000,
   });
 }
