@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Alert, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { API } from '@/src/api/api';
 import { useLogoutMutation, useUploadAvatarMutation } from '@/src/api/mutations';
 import { useUserQuery, useUserProfileQuery } from '@/src/api/queries';
 import { Text } from '@/src/components';
