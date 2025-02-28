@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Alert, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { API } from '@/src/api/api';
-import { useUploadAvatarMutation } from '@/src/api/mutations';
+import { useLogoutMutation, useUploadAvatarMutation } from '@/src/api/mutations';
 import { useUserQuery, useUserProfileQuery } from '@/src/api/queries';
 import { Text } from '@/src/components';
 import { AvatarUploader } from '@/src/components';
@@ -17,9 +17,10 @@ export default function Settings() {
   const { data: user } = useUserQuery();
   const { data: userProfile, isLoading } = useUserProfileQuery(user?.id || null);
   const { mutateAsync: updateAvatar, isPaused } = useUploadAvatarMutation();
+  const { mutateAsync: logout } = useLogoutMutation();
 
   async function onSignOut() {
-    await API.auth.logout();
+    await logout();
   }
 
   async function updateUserProfile(filePath: string, base64: string, contentType: string) {

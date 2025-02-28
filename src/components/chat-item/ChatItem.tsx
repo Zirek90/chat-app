@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Avatar, Text } from '../shared';
+import { useUserProfileQuery } from '@/src/api/queries';
 import { COLORS } from '@/src/constants';
-import { useGetProfileWithAvatar } from '@/src/hooks';
 import { ChatRoom } from '@/src/interfaces';
 
 interface ChatRoomItemProps {
@@ -18,7 +18,8 @@ export function ChatItem(props: ChatRoomItemProps) {
     () => chatRoom.participants?.filter((p) => p !== currentUserId) || [],
     [chatRoom, currentUserId],
   );
-  const participantProfile = useGetProfileWithAvatar(otherParticipants[0] || null);
+  const { data: participantProfile } = useUserProfileQuery(otherParticipants[0] || null);
+
   const lastMessage = chatRoom.messages?.[0] || { content: 'No messages yet', sender_name: '' };
 
   return (

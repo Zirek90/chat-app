@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Alert, StyleSheet, View, ImageBackground, Pressable } from 'react-native';
-import { API } from '@/src/api/api';
+import { StyleSheet, View, ImageBackground, Pressable } from 'react-native';
+import { useLoginMutation } from '@/src/api/mutations';
 import { Text, TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
 import { useThemeStore } from '@/src/store';
@@ -11,23 +11,20 @@ import { getBackgroundImage } from '@/src/utils';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { theme } = useThemeStore();
+  const { mutateAsync: login, isPending } = useLoginMutation();
 
   async function signInWithEmail() {
-    setLoading(true);
     try {
-      await API.auth.login({ email, password });
+      await login({ email, password });
       router.push('/');
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        console.error(error.message);
       } else {
-        console.error('Unknown error for login', error);
+        console.error('Unknown error during signup', error);
       }
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -62,14 +59,14 @@ export default function LoginPage() {
 
         <View style={styles.buttonContainer}>
           <Pressable
-            disabled={loading}
+            disabled={isPending}
             style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
             onPress={signInWithEmail}
           >
             <Text style={styles.buttonText}>Login</Text>
           </Pressable>
         </View>
-        <Pressable disabled={loading} onPress={() => router.push('/signup')}>
+        <Pressable disabled={isPending} onPress={() => router.push('/signup')}>
           <Text style={styles.linkText}>Don't have account yet? Sign Up!</Text>
         </Pressable>
       </SafeAreaView>

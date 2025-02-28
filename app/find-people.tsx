@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { API } from '@/src/api/api';
+import { useGetOrCreateChatroomMutation } from '@/src/api/mutations';
 import { useUserQuery, useUsersWithAvatarsQuery } from '@/src/api/queries';
 import { Avatar, Text, TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
@@ -27,13 +27,14 @@ export default function FindPeople() {
       ),
     [usersWithAvatars, search],
   );
+  const { mutateAsync: getOrCreateChatroom } = useGetOrCreateChatroomMutation();
   const router = useRouter();
 
   async function handleChat(participantId: string) {
     if (!user?.id) return;
 
     try {
-      const roomId = await API.chat.getOrCreateChatroom(user.id, participantId);
+      const roomId = await getOrCreateChatroom({ currentUserId: user!.id, participantId });
       router.replace({
         pathname: '/(tabs)/chat/[chatId]',
         params: { chatId: roomId },

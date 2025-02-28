@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Alert, StyleSheet, View, ImageBackground, Pressable } from 'react-native';
-import { API } from '@/src/api/api';
+import { useSignupMutation } from '@/src/api/mutations';
 import { Text, TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
 import { useThemeStore } from '@/src/store';
@@ -12,27 +12,26 @@ export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { theme } = useThemeStore();
+  const { mutateAsync: signup, isPending } = useSignupMutation();
 
   async function signUpWithEmail() {
-    setLoading(true);
     try {
-      const session = await API.auth.signup({ email, password, username });
+      const session = await signup({ email, password, username });
+
       if (!session) {
         Alert.alert('Please check your inbox for email verification!');
         return;
       }
+
       router.push('/');
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        console.error(error.message);
       } else {
-        console.error('Unknown error for login', error);
+        console.error('Unknown error during signup', error);
       }
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -75,14 +74,14 @@ export default function SignUpPage() {
 
         <View style={styles.buttonContainer}>
           <Pressable
-            disabled={loading}
+            disabled={isPending}
             style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
             onPress={signUpWithEmail}
           >
             <Text style={styles.buttonText}>Sign Up</Text>
           </Pressable>
         </View>
-        <Pressable disabled={loading} onPress={() => router.push('/')}>
+        <Pressable disabled={isPending} onPress={() => router.push('/')}>
           <Text style={styles.linkText}>Have account already? Log in!</Text>
         </Pressable>
       </SafeAreaView>

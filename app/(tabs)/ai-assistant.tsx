@@ -1,5 +1,5 @@
 import { ImageBackground, StyleSheet, View } from 'react-native';
-import { API } from '@/src/api/api';
+import { useAiMessageMutation } from '@/src/api/mutations';
 import { useUserQuery } from '@/src/api/queries';
 import { Chat, MessageInterface } from '@/src/features';
 import { useAiChatStore, useThemeStore } from '@/src/store';
@@ -9,6 +9,7 @@ export default function AiAssistant() {
   const { theme } = useThemeStore();
   const { messages, isTyping, addMessage, setTyping } = useAiChatStore();
   const { data: user } = useUserQuery();
+  const { mutateAsync: sendMessage } = useAiMessageMutation();
 
   async function onSend(newMessageText: string) {
     const newMessage: MessageInterface = {
@@ -25,7 +26,7 @@ export default function AiAssistant() {
     setTyping(true);
 
     try {
-      const aiResponseText = await API.ai.sendMessageToAiAssistant([...messages, newMessage]);
+      const aiResponseText = await sendMessage([...messages, newMessage]);
 
       const aiResponse: MessageInterface = {
         id: Date.now().toString() + '_ai',

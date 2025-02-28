@@ -2,9 +2,14 @@ import { useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { API } from '@/src/api/api';
-import { useUserQuery } from '@/src/api/queries';
+import {
+  useAddFileAccessMutation,
+  useSendMessageMutation,
+  useEditMessageMutation,
+  useProcessAttachmentsMutation,
+} from '@/src/api/mutations';
+import { useChatParticipantsQuery, useMessagesQuery, useUserQuery } from '@/src/api/queries';
 import { Chat } from '@/src/features';
-import { processAttachments } from '@/src/features/chat/utils';
 import { supabase } from '@/src/libs/supabase';
 import { useThemeStore } from '@/src/store';
 import { useChatStore } from '@/src/store/useChatStore';
@@ -15,6 +20,7 @@ export default function ChatRoom() {
   const { chatId } = useLocalSearchParams<{ chatId: string }>();
   const chatRoomId = Array.isArray(chatId) ? chatId[0] : chatId;
   const { theme } = useThemeStore();
+
   const messages = useChatStore((state) => state.messages);
   const addMessage = useChatStore((state) => state.addMessage);
   const setMessages = useChatStore((state) => state.setMessages);
@@ -23,21 +29,16 @@ export default function ChatRoom() {
   const setEditingMessage = useChatStore((state) => state.setEditingMessage);
 
   const { data: user } = useUserQuery();
+  const { data: chatMessages } = useMessagesQuery(chatRoomId);
+  const { data: participants } = useChatParticipantsQuery(chatRoomId);
+  const { mutateAsync: addFileAccess } = useAddFileAccessMutation();
+  const { mutateAsync: sendMessage } = useSendMessageMutation();
+  const { mutateAsync: editMessage } = useEditMessageMutation();
+  const { mutateAsync: processAttachments } = useProcessAttachmentsMutation();
 
   useEffect(() => {
-    if (!chatRoomId) return;
-
-    async function fetchMessages() {
-      try {
-        const msgs = await API.chat.getMessages(chatRoomId);
-
-        setMessages(msgs);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
-    }
-    fetchMessages();
-  }, [chatRoomId, setMessages, addMessage]);
+    if (chatMessages) setMessages(chatMessages);
+  }, [chatMessages, setMessages]);
 
   useEffect(() => {
     const channel = API.chat.subscribeToMessages(chatRoomId, addMessage);
@@ -49,36 +50,46 @@ export default function ChatRoom() {
   }, [chatRoomId, addMessage]);
 
   async function onSend(
-    newMessageText: string,
+    content: string,
     selectedFiles: FileType[] = [],
     selectedImages: ImageType[] = [],
     messageId?: string,
   ) {
-    const uploadedFiles = await processAttachments(
-      'chat-files',
-      selectedFiles,
-      'application/octet-stream',
-    );
-    const uploadedImages = await processAttachments('chat-images', selectedImages, 'image/jpeg');
+    const uploadedFiles = await processAttachments({
+      bucket: 'chat-files',
+      attachments: selectedFiles,
+      defaultMimeType: 'application/octet-stream',
+    });
+    const uploadedImages = await processAttachments({
+      bucket: 'chat-images',
+      attachments: selectedImages,
+      defaultMimeType: 'image/jpeg',
+    });
     const allAttachments = [...uploadedFiles, ...uploadedImages];
 
     try {
       if (messageId) {
-        const updatedMessage = await API.chat.editMessage(messageId, newMessageText);
+        const updatedMessage = await editMessage({ messageId, content });
         updateMessage(updatedMessage);
         setEditingMessage(null);
         return;
       }
-      await API.chat.sendMessage(
-        chatRoomId,
-        user?.id!,
-        user?.user_metadata.username,
-        newMessageText,
-        allAttachments,
-      );
 
-      const participants = await API.chat.getChatParticipants(chatRoomId);
-      await API.storage.addFileAccess(chatRoomId, allAttachments, participants);
+      await sendMessage({
+        chatId: chatRoomId,
+        userId: user?.id!,
+        username: user?.user_metadata.username,
+        content,
+        attachments: allAttachments,
+      });
+
+      if (participants) {
+        await addFileAccess({
+          chatroomId: chatRoomId,
+          files: allAttachments,
+          participants,
+        });
+      }
     } catch (error) {
       console.error('Error sending message:', error);
     }
