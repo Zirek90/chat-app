@@ -4,7 +4,7 @@ import { QUERY_KEYS } from './keys';
 
 export function useAllUsersQuery(currentUserId: string) {
   return useQuery({
-    queryKey: [QUERY_KEYS.ALL_USERS],
+    queryKey: [QUERY_KEYS.ALL_USERS, currentUserId],
     queryFn: async () => API.user.getAllUsers(currentUserId),
   });
 }

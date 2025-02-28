@@ -2,10 +2,11 @@ import { useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { API } from '@/src/api/api';
+import { useUserQuery } from '@/src/api/queries';
 import { Chat } from '@/src/features';
 import { processAttachments } from '@/src/features/chat/utils';
 import { supabase } from '@/src/libs/supabase';
-import { useThemeStore, useUserStore } from '@/src/store';
+import { useThemeStore } from '@/src/store';
 import { useChatStore } from '@/src/store/useChatStore';
 import { FileType, ImageType } from '@/src/types';
 import { getBackgroundImage } from '@/src/utils';
@@ -21,7 +22,7 @@ export default function ChatRoom() {
   const editingMessage = useChatStore((state) => state.editingMessage);
   const setEditingMessage = useChatStore((state) => state.setEditingMessage);
 
-  const { id, username } = useUserStore();
+  const { data: user } = useUserQuery();
 
   useEffect(() => {
     if (!chatRoomId) return;
@@ -68,7 +69,13 @@ export default function ChatRoom() {
         setEditingMessage(null);
         return;
       }
-      await API.chat.sendMessage(chatRoomId, id, username, newMessageText, allAttachments);
+      await API.chat.sendMessage(
+        chatRoomId,
+        user?.id!,
+        user?.user_metadata.username,
+        newMessageText,
+        allAttachments,
+      );
 
       const participants = await API.chat.getChatParticipants(chatRoomId);
       await API.storage.addFileAccess(chatRoomId, allAttachments, participants);

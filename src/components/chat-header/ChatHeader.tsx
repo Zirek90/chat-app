@@ -1,40 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Avatar, Text } from '../shared';
-import { API } from '@/src/api/api';
-import { useGetProfileWithAvatar } from '@/src/hooks';
-import { useUserStore } from '@/src/store';
-
+import { useChatParticipantsQuery, useUserProfileQuery, useUserQuery } from '@/src/api/queries';
 interface ChatHeaderProps {
   chatId: string;
 }
 
 export function ChatHeader(props: ChatHeaderProps) {
   const { chatId } = props;
-  const currentUserId = useUserStore((state) => state.id);
-  const [participantsId, setParticipantId] = useState<string | null>(null);
-  const participantProfile = useGetProfileWithAvatar(participantsId);
-
-  useEffect(() => {
-    async function fetchChatDetails() {
-      try {
-        const participants = await API.chat.getChatParticipants(chatId);
-        const otherUserId = participants?.find((id) => id !== currentUserId);
-        if (!otherUserId) return;
-
-        setParticipantId(otherUserId);
-      } catch (error) {
-        console.error('Error fetching chat details:', error);
-      }
-    }
-
-    fetchChatDetails();
-  }, [chatId, currentUserId]);
+  const { data: user } = useUserQuery();
+  const { data: participants } = useChatParticipantsQuery(chatId);
+  const participantId = useMemo(
+    () => participants?.find((id) => id !== user?.id) || null,
+    [participants, user],
+  );
+  const { data: participant } = useUserProfileQuery(participantId || null);
 
   return (
     <View style={styles.container}>
-      <Avatar username={participantProfile?.username || ''} avatar={participantProfile?.avatar} />
-      <Text style={styles.username}>{participantProfile?.username}</Text>
+      <Avatar username={participant?.username || ''} avatar={participant?.avatar} />
+      <Text style={styles.username}>{participant?.username}</Text>
     </View>
   );
 }

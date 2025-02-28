@@ -7,6 +7,7 @@ interface userProfile {
   avatar: string;
 }
 
+// TODO DELETE
 export function useGetProfileWithAvatar(userId: string | null) {
   const [userProfile, setUserProfile] = useState<userProfile | null>(null);
 

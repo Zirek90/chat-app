@@ -1,36 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useFonts, PatrickHand_400Regular } from '@expo-google-fonts/patrick-hand';
-import { Session } from '@supabase/supabase-js';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Slot, Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet, View } from 'react-native';
+import { useSessionQuery } from '../src/api/queries';
 import { API } from '@/src/api/api';
-import { AuthAPI } from '@/src/api/auth';
 import { queryClient } from '@/src/api/query-client';
-import { useUserStore } from '@/src/store';
 
 SplashScreen.preventAutoHideAsync();
 
 function InitialPage() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data: session, isLoading, refetch } = useSessionQuery();
   const segments = useSegments();
-  const { setUserData } = useUserStore();
   const router = useRouter();
   const [fontsLoaded] = useFonts({
     Patrick_Hand_Regular: PatrickHand_400Regular,
   });
 
   useEffect(() => {
-    const unsubscribe = AuthAPI.subscribeToAuthChanges((newSession) => {
-      setSession(newSession);
-      setIsLoading(false);
+    const unsubscribe = API.auth.subscribeToAuthChanges(() => {
+      refetch();
     });
 
-    return unsubscribe;
-  }, []);
+    return () => unsubscribe();
+  }, [refetch]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -43,26 +38,6 @@ function InitialPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, session]);
-
-  useEffect(() => {
-    async function fetchUserData() {
-      const { user_metadata } = await API.user.getUser();
-      const avatar = await API.storage.getAvatar(user_metadata.avatar);
-      if (user_metadata) {
-        setUserData({
-          id: user_metadata.sub || '',
-          email: user_metadata.email || '',
-          avatar: avatar ?? null,
-          username: user_metadata.username || 'Unknown',
-        });
-      }
-    }
-
-    if (session) {
-      fetchUserData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
 
   useEffect(() => {
     async function hideSplashScreen() {

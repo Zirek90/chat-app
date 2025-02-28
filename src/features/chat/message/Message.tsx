@@ -6,10 +6,9 @@ import { MessageInterface } from '../interfaces';
 import { ChatModeType } from '../types';
 import { Attachments } from './attachments';
 import { useMessageSwipe } from './useMessageSwipe.hook';
-import { Text, Avatar } from '@/src/components';
 import { COLORS } from '@/src/constants';
-import { useGetProfileWithAvatar } from '@/src/hooks';
-import { useUserStore } from '@/src/store';
+import { useUserQuery, useUserProfileQuery } from '@/src/api/queries';
+import { Text, Avatar } from '@/src/components';
 
 interface MessageProps {
   message: MessageInterface;
@@ -19,12 +18,13 @@ interface MessageProps {
 
 export function Message(props: MessageProps) {
   const { message, mode, onEditMessage } = props;
-  const userId = useUserStore((state) => state.id);
-  const avatar = useUserStore((state) => state.avatar);
-  const isMe = message.sender_id === userId;
+  const { data: user } = useUserQuery();
+  const { data: userProfile } = useUserProfileQuery(user?.id || null);
+  const { data: participantProfile } = useUserProfileQuery(message?.sender_id || null);
+
+  const isMe = message.sender_id === user?.id;
   const isAI = mode === 'ai';
-  // TODO figure out how to store participant avatars as now we do request for each message and it doesn't have sense
-  const participantProfile = useGetProfileWithAvatar(message.sender_id);
+
   const {
     animatedMessageStyle,
     animatedContainerStyle,
@@ -72,7 +72,7 @@ export function Message(props: MessageProps) {
           </View>
         </View>
 
-        {isMe && <Avatar avatar={avatar} username={message.sender_name} />}
+        {isMe && <Avatar avatar={userProfile?.avatar} username={message.sender_name} />}
       </Animated.View>
     </GestureDetector>
   );

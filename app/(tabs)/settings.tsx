@@ -1,18 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Alert, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { API } from '@/src/api/api';
+import { useUploadAvatarMutation } from '@/src/api/mutations';
+import { useUserQuery, useUserProfileQuery } from '@/src/api/queries';
 import { Text } from '@/src/components';
 import { AvatarUploader } from '@/src/components';
 import { COLORS } from '@/src/constants';
 import { ThemeEnum } from '@/src/enums';
 import { useColors } from '@/src/hooks';
-import { useThemeStore, useUserStore } from '@/src/store';
+import { useThemeStore } from '@/src/store';
 import { getBackgroundImage } from '@/src/utils';
 
 export default function Settings() {
   const { theme, toggleTheme } = useThemeStore();
-  const { email, avatar, username, setUserAvatar, setLoading, loading, id } = useUserStore();
   const { textColor, buttonColor, buttonTextColor } = useColors();
+  const { data: user } = useUserQuery();
+  const { data: userProfile, isLoading } = useUserProfileQuery(user?.id || null);
+  const { mutateAsync: updateAvatar, isPaused } = useUploadAvatarMutation();
 
   async function onSignOut() {
     await API.auth.logout();
@@ -20,17 +24,11 @@ export default function Settings() {
 
   async function updateUserProfile(filePath: string, base64: string, contentType: string) {
     try {
-      setLoading(true);
-      await API.user.updateProfile({ avatar: filePath });
-      await API.storage.uploadAvatar(filePath, base64, contentType);
-      const avatar = await API.storage.getAvatar(filePath);
-      setUserAvatar(avatar);
+      await updateAvatar({ filePath, base64, contentType });
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert('Error', error.message);
       }
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -43,15 +41,15 @@ export default function Settings() {
       <View style={styles.container}>
         <View style={styles.topSection}>
           <AvatarUploader
-            avatarUrl={avatar || ''}
-            username={username}
+            avatarUrl={userProfile?.avatar || ''}
+            username={userProfile?.username || ''}
             onAvatarUpdate={updateUserProfile}
-            id={id}
-            loading={loading}
+            id={user?.id || ''}
+            loading={isPaused || isLoading}
           />
 
-          <Text style={[styles.username, { color: textColor }]}>{username}</Text>
-          <Text style={[styles.email, { color: textColor }]}>{email}</Text>
+          <Text style={[styles.username, { color: textColor }]}>{userProfile?.username}</Text>
+          <Text style={[styles.email, { color: textColor }]}>{user?.email}</Text>
 
           <TouchableOpacity
             style={[styles.toggleButton, { backgroundColor: buttonColor }]}

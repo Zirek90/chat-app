@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'expo-router';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   ImageBackground,
   StyleSheet,
@@ -10,65 +9,38 @@ import {
   View,
 } from 'react-native';
 import { API } from '@/src/api/api';
+import { useUserQuery, useUsersWithAvatarsQuery } from '@/src/api/queries';
 import { Avatar, Text, TextInput } from '@/src/components';
 import { COLORS } from '@/src/constants';
-import { UserDataInterface } from '@/src/interfaces';
-import { useThemeStore, useUserStore } from '@/src/store';
+import { useThemeStore } from '@/src/store';
 import { getBackgroundImage } from '@/src/utils';
 
 export default function FindPeople() {
   const { theme } = useThemeStore();
-  const currentUserId = useUserStore((state) => state.id);
-  const [users, setUsers] = useState<UserDataInterface[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<UserDataInterface[]>([]);
+  const { data: user } = useUserQuery();
+  const { data: usersWithAvatars, isLoading } = useUsersWithAvatarsQuery(user?.id || null);
   const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
+  const filteredUsers = useMemo(
+    () =>
+      (usersWithAvatars || []).filter((u) =>
+        u.username!.toLowerCase().includes(search.toLowerCase()),
+      ),
+    [usersWithAvatars, search],
+  );
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const userList = (await API.user.getAllUsers(currentUserId)) as UserDataInterface[];
-        // TODO move this part to separate component (renderItem part))
-        const usersWithAvatars = await Promise.all(
-          userList.map(async (user) => {
-            const avatar = user.avatar ? await API.storage.getAvatar(user.avatar) : null;
-            return { ...user, avatar };
-          }),
-        );
-
-        setUsers(usersWithAvatars);
-        setFilteredUsers(usersWithAvatars);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (!currentUserId) return;
-    fetchUsers();
-  }, [currentUserId]);
-
-  function handleSearch(text: string) {
-    setSearch(text);
-    setFilteredUsers(
-      users.filter((user) => user.username.toLowerCase().includes(text.toLowerCase())),
-    );
-  }
-
-  async function handleChat(userId: string) {
-    if (!currentUserId) return;
+  async function handleChat(participantId: string) {
+    if (!user?.id) return;
 
     try {
-      const roomId = await API.chat.getOrCreateChatroom(currentUserId, userId);
+      const roomId = await API.chat.getOrCreateChatroom(user.id, participantId);
       router.replace({
         pathname: '/(tabs)/chat/[chatId]',
         params: { chatId: roomId },
       });
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        console.error(error.message);
       } else {
         console.error('Unknown error for creating a chat room', error);
       }
@@ -87,10 +59,10 @@ export default function FindPeople() {
           placeholder="Search people..."
           placeholderTextColor="#aaa"
           value={search}
-          onChangeText={handleSearch}
+          onChangeText={setSearch}
           autoCorrect={false}
         />
-        {loading ? (
+        {isLoading ? (
           <ActivityIndicator size="large" color="white" />
         ) : (
           <FlatList
@@ -102,7 +74,7 @@ export default function FindPeople() {
                 style={styles.userItem}
                 activeOpacity={0.7}
               >
-                <Avatar username={item.username} avatar={item.avatar} />
+                <Avatar username={item.username || ''} avatar={item.avatar} />
                 <View style={styles.userInfo}>
                   <Text style={styles.username}>{item.username}</Text>
                 </View>

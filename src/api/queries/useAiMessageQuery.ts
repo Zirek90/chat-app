@@ -5,7 +5,7 @@ import { MessageInterface } from '@/src/features';
 
 export function useAiMessageQuery(messages: MessageInterface[]) {
   return useQuery({
-    queryKey: [QUERY_KEYS.AI_MESSAGE],
+    queryKey: [QUERY_KEYS.AI_MESSAGE, messages],
     queryFn: async () => API.ai.sendMessageToAiAssistant(messages),
   });
 }

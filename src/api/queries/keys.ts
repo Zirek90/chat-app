@@ -4,6 +4,7 @@ export const QUERY_KEYS = {
   USER: 'user',
   PROFILE: 'profile',
   ALL_USERS: 'all_users',
+  ALL_USERS_WITH_AVATAR: 'all_users_with_avatar',
   AVATAR: 'avatar',
   USER_CHATROOMS: 'user_chatrooms',
   GET_OR_CREATE_CHATROOMS: 'get_or_create_chatroom',

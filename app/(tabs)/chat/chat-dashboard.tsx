@@ -1,31 +1,13 @@
-import { useState, useEffect } from 'react';
 import { ActivityIndicator, FlatList, ImageBackground, StyleSheet, View } from 'react-native';
-import { ChatAPI } from '@/src/api/chat';
+import { useUserChatroomsQuery, useUserQuery } from '@/src/api/queries';
 import { ChatItem } from '@/src/components';
-import { ChatRoom } from '@/src/interfaces';
-import { useThemeStore, useUserStore } from '@/src/store';
+import { useThemeStore } from '@/src/store';
 import { getBackgroundImage } from '@/src/utils';
 
 export default function ChatDashboard() {
   const { theme } = useThemeStore();
-  const { id: userId } = useUserStore();
-  const [chatrooms, setChatrooms] = useState<ChatRoom[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    async function fetchChatrooms() {
-      try {
-        setLoading(true);
-        const chats = await ChatAPI.getUserChatrooms(userId);
-        setChatrooms(chats);
-      } catch (error) {
-        console.error('Error fetching chatrooms:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    if (userId) fetchChatrooms();
-  }, [userId]);
+  const { data: user } = useUserQuery();
+  const { data: chatrooms, isLoading } = useUserChatroomsQuery(user?.id || null);
 
   return (
     <ImageBackground
@@ -34,13 +16,13 @@ export default function ChatDashboard() {
       resizeMode="cover"
     >
       <View style={styles.container}>
-        {loading ? (
+        {isLoading ? (
           <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
         ) : (
           <FlatList
-            data={chatrooms}
+            data={chatrooms || []}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <ChatItem chatRoom={item} currentUserId={userId} />}
+            renderItem={({ item }) => <ChatItem chatRoom={item} currentUserId={user?.id || ''} />}
           />
         )}
       </View>

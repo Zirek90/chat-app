@@ -1,19 +1,20 @@
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { API } from '@/src/api/api';
+import { useUserQuery } from '@/src/api/queries';
 import { Chat, MessageInterface } from '@/src/features';
-import { useAiChatStore, useThemeStore, useUserStore } from '@/src/store';
+import { useAiChatStore, useThemeStore } from '@/src/store';
 import { getBackgroundImage } from '@/src/utils';
 
 export default function AiAssistant() {
   const { theme } = useThemeStore();
   const { messages, isTyping, addMessage, setTyping } = useAiChatStore();
-  const { username, id } = useUserStore();
+  const { data: user } = useUserQuery();
 
   async function onSend(newMessageText: string) {
     const newMessage: MessageInterface = {
       id: Date.now().toString(),
-      sender_id: id,
-      sender_name: username,
+      sender_id: user!.id,
+      sender_name: user?.user_metadata?.username,
       content: newMessageText,
       files: [],
       edited: false,
