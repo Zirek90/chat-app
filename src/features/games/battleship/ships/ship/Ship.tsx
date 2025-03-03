@@ -1,27 +1,34 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ShipInterface } from '../../interface';
+import { useBattleshipStore } from '../../store';
 import { Text } from '@/src/components';
 import { COLORS } from '@/src/constants';
 
 type ShipProps = ShipInterface;
 
 export function Ship(props: ShipProps) {
-  const { name, size, amount, placed } = props;
+  const { id, name, size, placed } = props;
+  const selectedShip = useBattleshipStore((state) => state.selectedShip);
+  const setSelectedShip = useBattleshipStore((state) => state.setSelectedShip);
+  const unplaceShip = useBattleshipStore((state) => state.unplaceShip);
 
   return (
-    <View style={[styles.shipCard, placed ? styles.shipPlaced : styles.shipPending]}>
-      <Text style={styles.shipName}>{name}</Text>
-      <Text style={styles.shipSize}>{`Size: ${size} cells`}</Text>
-      <Text style={styles.shipAmount}>{`Amount: ${amount}`}</Text>
-    </View>
+    <TouchableOpacity onPress={() => (placed ? unplaceShip(id) : setSelectedShip(id))}>
+      <View
+        style={[
+          styles.shipCard,
+          placed ? styles.shipPlaced : styles.shipPending,
+          selectedShip?.id === id && styles.shipSelected,
+        ]}
+      >
+        <Text style={styles.shipName}>{name}</Text>
+        <Text style={styles.shipSize}>{`Size: ${size} cells`}</Text>
+      </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  shipAmount: {
-    color: COLORS.shipText,
-    fontSize: 12,
-  },
   shipCard: {
     alignItems: 'center',
     borderColor: COLORS.white,
@@ -29,8 +36,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     elevation: 4,
     justifyContent: 'center',
-    margin: 5,
-    padding: 7,
+    margin: 3,
+    padding: 5,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -38,17 +45,20 @@ const styles = StyleSheet.create({
   },
   shipName: {
     color: COLORS.shipName,
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 'bold',
   },
   shipPending: {
     backgroundColor: COLORS.shipPending,
+  },
+  shipSelected: {
+    backgroundColor: COLORS.shipSelected,
   },
   shipPlaced: {
     backgroundColor: COLORS.shipPlaced,
   },
   shipSize: {
     color: COLORS.shipText,
-    fontSize: 12,
+    fontSize: 10,
   },
 });

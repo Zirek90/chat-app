@@ -2,7 +2,7 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useBattleshipStore } from '../../store';
 import { COLORS } from '@/src/constants';
 
-interface CellProps {
+export interface CellProps {
   row: number;
   col: number;
 }
@@ -11,14 +11,14 @@ export function Cell(props: CellProps) {
   const { row, col } = props;
   const grid = useBattleshipStore((state) => state.grid);
   const placeShip = useBattleshipStore((state) => state.placeShip);
-  const unplaceShip = useBattleshipStore((state) => state.unplaceShip);
+  const selectedShip = useBattleshipStore((state) => state.selectedShip);
+  const ships = useBattleshipStore((state) => state.ships);
 
   const handlePress = () => {
-    if (grid[row][col]) {
-      unplaceShip(row, col);
-    } else {
-      placeShip(row, col);
-    }
+    const ship = ships.find((ship) => ship.id === selectedShip?.id);
+    if (!ship) return;
+
+    placeShip(row, col);
   };
 
   return (
@@ -43,6 +43,6 @@ const styles = StyleSheet.create({
     width: 30,
   },
   isMarked: {
-    backgroundColor: COLORS.isMarked,
+    backgroundColor: COLORS.shipPlaced,
   },
 });
