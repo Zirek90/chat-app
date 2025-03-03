@@ -1,6 +1,6 @@
 import { MessageInterface } from '../features';
-import { StorageAPI } from './storage';
 import { supabase } from '../libs/supabase';
+import { getCachedFile } from '../utils';
 
 export const ChatAPI = {
   getUserChatrooms: async (userId: string) => {
@@ -60,12 +60,13 @@ export const ChatAPI = {
 
     return data?.participants;
   },
-  getMessages: async (chatId: string) => {
+  getMessages: async (chatId: string, pageParam = 0, pageSize = 20) => {
     const { data, error } = await supabase
       .from('messages')
       .select('*')
       .eq('chatroom_id', chatId)
-      .order('timestamp', { ascending: true });
+      .order('timestamp', { ascending: true }) // Get newest messages first
+      .range(pageParam, pageParam + pageSize - 1); // Fetch 20 messages at a time
 
     if (error) throw error;
 
@@ -76,11 +77,11 @@ export const ChatAPI = {
 
         const filesWithUrls = await Promise.all(
           message.files.map(async (file) => {
-            const signedUrl = await StorageAPI.getFileUrl(
-              file.type === 'image' ? 'chat-images' : 'chat-files',
+            const localPath = await getCachedFile(
               file.path,
+              file.type === 'image' ? 'chat-images' : 'chat-files',
             );
-            return { ...file, url: signedUrl };
+            return { ...file, url: localPath }; // Use cached file
           }),
         );
 

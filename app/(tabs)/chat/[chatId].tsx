@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { API } from '@/src/api/api';
@@ -29,12 +29,14 @@ export default function ChatRoom() {
   const setEditingMessage = useChatStore((state) => state.setEditingMessage);
 
   const { data: user } = useUserQuery();
-  const { data: chatMessages } = useMessagesQuery(chatRoomId);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useMessagesQuery(chatRoomId);
   const { data: participants } = useChatParticipantsQuery(chatRoomId);
   const { mutateAsync: addFileAccess } = useAddFileAccessMutation();
   const { mutateAsync: sendMessage } = useSendMessageMutation();
   const { mutateAsync: editMessage } = useEditMessageMutation();
   const { mutateAsync: processAttachments } = useProcessAttachmentsMutation();
+
+  const chatMessages = useMemo(() => data?.pages.flat() || [], [data]); // Flatten paginated data
 
   useEffect(() => {
     if (chatMessages) setMessages(chatMessages);
@@ -48,6 +50,13 @@ export default function ChatRoom() {
       }
     };
   }, [chatRoomId, addMessage]);
+
+  function handleNextPage() {
+    if (hasNextPage && !isFetchingNextPage) {
+      console.log('fetching');
+      fetchNextPage();
+    }
+  }
 
   async function onSend(
     content: string,
@@ -110,6 +119,8 @@ export default function ChatRoom() {
           editingMessage={editingMessage}
           onEditCancel={() => setEditingMessage(null)}
           onEditMessage={setEditingMessage}
+          handleNextPage={handleNextPage}
+          isFetchingNextPage={isFetchingNextPage}
         />
       </View>
     </ImageBackground>

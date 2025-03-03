@@ -1,4 +1,5 @@
 import { StorageAPI } from './storage';
+import { getCachedAvatar } from '../utils';
 import { UserUpdateInterface } from '@/src/interfaces';
 import { supabase } from '@/src/libs/supabase';
 
@@ -18,11 +19,9 @@ export const UserAPI = {
 
     if (error) throw error;
 
-    let avatar = null;
-    if (data.avatar) {
-      avatar = await StorageAPI.getAvatar(data.avatar);
-    }
-    return { ...data, avatar };
+    const cachedAvatar = data.avatar ? await getCachedAvatar(data.avatar) : null;
+
+    return { ...data, avatar: cachedAvatar };
   },
   updateProfile: async (updates: UserUpdateInterface) => {
     const { data, error } = await supabase.auth.updateUser({ data: updates });
