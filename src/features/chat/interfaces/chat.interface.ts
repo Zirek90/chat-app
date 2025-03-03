@@ -30,7 +30,7 @@ export interface MessageInterface {
   content: string;
   edited: boolean;
   files: MessageFile[];
-  timestamp: string;
+  timestamp: number;
   avatar?: string;
 }
 
