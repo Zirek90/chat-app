@@ -25,8 +25,8 @@ export function ShipPreview() {
       >
         {Array(selectedShip.size)
           .fill(null)
-          .map((ship) => (
-            <View key={ship.id} style={styles.previewCell} />
+          .map((_, index) => (
+            <View key={index} style={styles.previewCell} />
           ))}
       </View>
     </View>
@@ -35,12 +35,11 @@ export function ShipPreview() {
 
 const styles = StyleSheet.create({
   previewContainer: {
-    marginTop: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingVertical: 3,
-    paddingHorizontal: 6,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
     borderRadius: 6,
     backgroundColor: COLORS.previewContainer,
   },
@@ -48,7 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: COLORS.white,
-    marginRight: 6,
+    marginRight: 10,
   },
   previewShip: {
     justifyContent: 'center',

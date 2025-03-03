@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ShipInterface } from '../../interface';
 import { useBattleshipStore } from '../../store';
 import { Text } from '@/src/components';
@@ -13,17 +13,16 @@ export function Ship(props: ShipProps) {
   const unplaceShip = useBattleshipStore((state) => state.unplaceShip);
 
   return (
-    <TouchableOpacity onPress={() => (placed ? unplaceShip(id) : setSelectedShip(id))}>
-      <View
-        style={[
-          styles.shipCard,
-          placed ? styles.shipPlaced : styles.shipPending,
-          selectedShip?.id === id && styles.shipSelected,
-        ]}
-      >
-        <Text style={styles.shipName}>{name}</Text>
-        <Text style={styles.shipSize}>{`Size: ${size} cells`}</Text>
-      </View>
+    <TouchableOpacity
+      onPress={() => (placed ? unplaceShip(id) : setSelectedShip(id))}
+      style={[
+        styles.shipCard,
+        placed ? styles.shipPlaced : styles.shipPending,
+        selectedShip?.id === id && styles.shipSelected,
+      ]}
+    >
+      <Text style={styles.shipName}>{name}</Text>
+      <Text style={styles.shipSize}>{`Size: ${size} cells`}</Text>
     </TouchableOpacity>
   );
 }

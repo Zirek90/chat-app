@@ -1,11 +1,9 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { CellInterface } from '../../interface';
 import { useBattleshipStore } from '../../store';
 import { COLORS } from '@/src/constants';
 
-export interface CellProps {
-  row: number;
-  col: number;
-}
+type CellProps = CellInterface;
 
 export function Cell(props: CellProps) {
   const { row, col } = props;
