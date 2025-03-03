@@ -1,12 +1,22 @@
 import { useRef } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import { ChatInterface } from './interfaces';
 import { Loader } from './loader';
 import { Message } from './message';
 import { MessageForm } from './message-form';
 
 export function Chat(props: ChatInterface) {
-  const { messages, mode, onSend, isTyping, editingMessage, onEditCancel, onEditMessage } = props;
+  const {
+    messages,
+    mode,
+    onSend,
+    isTyping,
+    editingMessage,
+    onEditCancel,
+    onEditMessage,
+    handleNextPage,
+    isFetchingNextPage,
+  } = props;
   const flatListRef = useRef<FlatList>(null);
 
   function handleScrollToEnd() {
@@ -15,7 +25,10 @@ export function Chat(props: ChatInterface) {
 
   return (
     <View style={styles.container}>
+      {isFetchingNextPage && <ActivityIndicator size="small" />}
       <FlatList
+        onEndReached={handleNextPage}
+        onEndReachedThreshold={0.1}
         ref={flatListRef}
         data={messages}
         keyExtractor={(item) => item.id}
@@ -25,6 +38,7 @@ export function Chat(props: ChatInterface) {
         onContentSizeChange={handleScrollToEnd}
         onLayout={handleScrollToEnd}
       />
+
       {isTyping && <Loader />}
       <MessageForm onSend={onSend} editingMessage={editingMessage} onEditCancel={onEditCancel} />
     </View>

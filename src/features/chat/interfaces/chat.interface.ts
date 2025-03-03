@@ -14,6 +14,8 @@ export interface ChatInterface {
   editingMessage: MessageInterface | null;
   onEditCancel: () => void;
   onEditMessage: (message: MessageInterface | null) => void;
+  handleNextPage?: () => void;
+  isFetchingNextPage?: boolean;
 }
 
 export interface MessageFile {

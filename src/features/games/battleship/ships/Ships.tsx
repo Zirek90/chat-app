@@ -1,43 +1,44 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useBattleshipStore } from '../store';
+import { RemainingShips } from './remaining-ships';
+import { RorateShip } from './rotate-ship';
 import { Ship } from './ship';
+import { ShipPreview } from './ship-preview';
 import { COLORS } from '@/src/constants';
 
 export function Ships() {
   const ships = useBattleshipStore((state) => state.ships);
-  const remainingShips = useBattleshipStore((state) => state.remainingShips);
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.remainingShipsText}>{`Ships left to place: ${remainingShips}`}</Text>
+      <RemainingShips />
       <View style={styles.shipsList}>
         {ships.map((ship) => (
           <Ship key={ship.id} {...ship} />
         ))}
       </View>
+      <RorateShip />
+      <ShipPreview />
     </View>
   );
 }
 const styles = StyleSheet.create({
-  remainingShipsText: {
-    color: COLORS.white,
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  shipsList: {
-    flexDirection: 'row',
-  },
   wrapper: {
     backgroundColor: COLORS.shipWrapper,
     borderRadius: 12,
     elevation: 4,
     marginBottom: 30,
-    padding: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+    alignItems: 'center',
+  },
+  shipsList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
 });
