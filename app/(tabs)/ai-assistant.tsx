@@ -19,7 +19,7 @@ export default function AiAssistant() {
       content: newMessageText,
       files: [],
       edited: false,
-      timestamp: Date.now().toString(),
+      timestamp: Date.now(),
     };
 
     addMessage(newMessage);
@@ -35,7 +35,7 @@ export default function AiAssistant() {
         content: aiResponseText,
         files: [],
         edited: false,
-        timestamp: Date.now().toString(),
+        timestamp: Date.now(),
       };
 
       addMessage(aiResponse);
