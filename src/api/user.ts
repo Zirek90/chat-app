@@ -1,4 +1,3 @@
-import { StorageAPI } from './storage';
 import { getCachedAvatar } from '../utils';
 import { UserUpdateInterface } from '@/src/interfaces';
 import { supabase } from '@/src/libs/supabase';
