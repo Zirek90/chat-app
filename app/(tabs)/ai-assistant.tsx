@@ -13,13 +13,13 @@ export default function AiAssistant() {
 
   async function onSend(newMessageText: string) {
     const newMessage: MessageInterface = {
-      id: Date.now().toString(),
+      id: new Date().toISOString(),
       sender_id: user!.id,
-      sender_name: user?.user_metadata?.username,
+      sender_name: user?.username,
       content: newMessageText,
       files: [],
       edited: false,
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
     };
 
     addMessage(newMessage);
@@ -35,7 +35,7 @@ export default function AiAssistant() {
         content: aiResponseText,
         files: [],
         edited: false,
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
       };
 
       addMessage(aiResponse);

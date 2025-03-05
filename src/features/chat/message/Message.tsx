@@ -6,9 +6,9 @@ import { MessageInterface } from '../interfaces';
 import { ChatModeType } from '../types';
 import { Attachments } from './attachments';
 import { useMessageSwipe } from './useMessageSwipe.hook';
-import { COLORS } from '@/src/constants';
 import { useUserQuery, useUserProfileQuery } from '@/src/api/queries';
 import { Text, Avatar } from '@/src/components';
+import { COLORS } from '@/src/constants';
 
 interface MessageProps {
   message: MessageInterface;
@@ -19,7 +19,6 @@ interface MessageProps {
 export function Message(props: MessageProps) {
   const { message, mode, onEditMessage } = props;
   const { data: user } = useUserQuery();
-  const { data: userProfile } = useUserProfileQuery(user?.id || null);
   const { data: participantProfile } = useUserProfileQuery(message?.sender_id || null);
 
   const isMe = message.sender_id === user?.id;
@@ -72,7 +71,7 @@ export function Message(props: MessageProps) {
           </View>
         </View>
 
-        {isMe && <Avatar avatar={userProfile?.avatar} username={message.sender_name} />}
+        {isMe && <Avatar avatar={user?.avatar} username={message.sender_name} />}
       </Animated.View>
     </GestureDetector>
   );

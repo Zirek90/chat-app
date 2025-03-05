@@ -1,3 +1,4 @@
+import { fetchMessagesFromDb, insertMessageToDb, updateMessageInDb } from '../db';
 import { MessageInterface } from '../features';
 import { supabase } from '../libs/supabase';
 import { getCachedFile } from '../utils';
@@ -61,6 +62,11 @@ export const ChatAPI = {
     return data?.participants;
   },
   getMessages: async (chatId: string, pageParam = 0, pageSize = 20) => {
+    const cachedMessages = await fetchMessagesFromDb(chatId);
+    if (cachedMessages.length > 0) {
+      return cachedMessages;
+    }
+
     const { data, error } = await supabase
       .from('messages')
       .select('*')
@@ -85,7 +91,11 @@ export const ChatAPI = {
           }),
         );
 
-        return { ...message, files: filesWithUrls };
+        const updatedMessage = { ...message, files: filesWithUrls };
+
+        await insertMessageToDb(updatedMessage);
+
+        return updatedMessage;
       }),
     );
 
@@ -103,12 +113,15 @@ export const ChatAPI = {
       sender_id: userId,
       sender_name: username,
       files: attachments,
+      edited: false,
       content,
       timestamp: new Date().toISOString(),
     };
 
-    const { data, error } = await supabase.from('messages').insert([newMessage]).single();
+    const { data, error } = await supabase.from('messages').insert([newMessage]).select().single();
     if (error) throw error;
+    await insertMessageToDb({ ...newMessage, id: data.id } as MessageInterface);
+
     return data;
   },
   editMessage: async (messageId: string, content: string) => {
@@ -120,7 +133,8 @@ export const ChatAPI = {
       .single();
 
     if (error) throw error;
-    // TODO figure out how to avoid unknown
+
+    await updateMessageInDb(messageId, content, true);
     return data as unknown as MessageInterface;
   },
   subscribeToMessages: (chatId: string, callback: (message: MessageInterface) => void) => {

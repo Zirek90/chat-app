@@ -3,7 +3,7 @@ export * from './useAllUsersQuery';
 export * from './useAvatarQuery';
 export * from './useChatParticipantsQuery';
 export * from './useMessagesQuery';
-export * from './useUserProfileQuery';
+export * from './useParticipantQuery';
 export * from './useSessionQuery';
 export * from './useUserChatroomsQuery';
 export * from './useUserQuery';

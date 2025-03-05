@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Alert, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useLogoutMutation, useUploadAvatarMutation } from '@/src/api/mutations';
-import { useUserQuery, useUserProfileQuery } from '@/src/api/queries';
+import { useUserQuery } from '@/src/api/queries';
 import { Text } from '@/src/components';
 import { AvatarUploader } from '@/src/components';
 import { COLORS } from '@/src/constants';
@@ -13,8 +13,7 @@ import { getBackgroundImage } from '@/src/utils';
 export default function Settings() {
   const { theme, toggleTheme } = useThemeStore();
   const { textColor, buttonColor, buttonTextColor } = useColors();
-  const { data: user } = useUserQuery();
-  const { data: userProfile, isLoading } = useUserProfileQuery(user?.id || null);
+  const { data: user, isLoading } = useUserQuery();
   const { mutateAsync: updateAvatar, isPaused } = useUploadAvatarMutation();
   const { mutateAsync: logout } = useLogoutMutation();
 
@@ -41,14 +40,14 @@ export default function Settings() {
       <View style={styles.container}>
         <View style={styles.topSection}>
           <AvatarUploader
-            avatarUrl={userProfile?.avatar || ''}
-            username={userProfile?.username || ''}
+            avatarUrl={user?.avatar || ''}
+            username={user?.username || ''}
             onAvatarUpdate={updateUserProfile}
             id={user?.id || ''}
             loading={isPaused || isLoading}
           />
 
-          <Text style={[styles.username, { color: textColor }]}>{userProfile?.username}</Text>
+          <Text style={[styles.username, { color: textColor }]}>{user?.username}</Text>
           <Text style={[styles.email, { color: textColor }]}>{user?.email}</Text>
 
           <TouchableOpacity
