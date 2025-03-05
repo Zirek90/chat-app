@@ -8,7 +8,7 @@ import { StyleSheet, View } from 'react-native';
 import { useSessionQuery } from '../src/api/queries';
 import { API } from '@/src/api/api';
 import { queryClient } from '@/src/api/query-client';
-import { createMessagesTable, flushDatabase } from '@/src/db';
+import { createMessagesTable, createParticipantsTable, createUserTable } from '@/src/db';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,8 +31,10 @@ function InitialPage() {
   useEffect(() => {
     async function initializeDatabase() {
       await createMessagesTable();
+      await createUserTable();
+      await createParticipantsTable();
       // await flushDatabase();
-      console.log('SQLite messages table initialized');
+      console.log('SQLite tables initialized');
     }
 
     initializeDatabase();
