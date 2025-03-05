@@ -15,7 +15,7 @@ export default function AiAssistant() {
     const newMessage: MessageInterface = {
       id: Date.now().toString(),
       sender_id: user!.id,
-      sender_name: user?.user_metadata?.username,
+      sender_name: user?.username,
       content: newMessageText,
       files: [],
       edited: false,

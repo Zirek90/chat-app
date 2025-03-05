@@ -1,4 +1,5 @@
 import { Session } from '@supabase/supabase-js';
+import { clearUserTable } from '../db';
 import { LoginCredentialsInterface, SignUpCredentialsInterface } from '@/src/interfaces';
 import { supabase } from '@/src/libs/supabase';
 
@@ -34,5 +35,6 @@ export const AuthAPI = {
   logout: async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+    await clearUserTable();
   },
 };

@@ -87,7 +87,7 @@ export default function ChatRoom() {
       await sendMessage({
         chatId: chatRoomId,
         userId: user?.id!,
-        username: user?.user_metadata.username,
+        username: user?.username,
         content,
         attachments: allAttachments,
       });
