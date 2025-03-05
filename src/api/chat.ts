@@ -1,3 +1,4 @@
+import { fetchMessagesFromDb, insertMessageToDb } from '../db';
 import { MessageInterface } from '../features';
 import { supabase } from '../libs/supabase';
 import { getCachedFile } from '../utils';
@@ -61,6 +62,11 @@ export const ChatAPI = {
     return data?.participants;
   },
   getMessages: async (chatId: string, pageParam = 0, pageSize = 20) => {
+    const cachedMessages = await fetchMessagesFromDb(chatId);
+    if (cachedMessages.length > 0) {
+      return cachedMessages;
+    }
+
     const { data, error } = await supabase
       .from('messages')
       .select('*')
@@ -85,7 +91,12 @@ export const ChatAPI = {
           }),
         );
 
-        return { ...message, files: filesWithUrls };
+        const updatedMessage = { ...message, files: filesWithUrls };
+
+        // Update SQLite db
+        await insertMessageToDb(updatedMessage);
+
+        return updatedMessage;
       }),
     );
 

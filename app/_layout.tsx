@@ -8,6 +8,7 @@ import { StyleSheet, View } from 'react-native';
 import { useSessionQuery } from '../src/api/queries';
 import { API } from '@/src/api/api';
 import { queryClient } from '@/src/api/query-client';
+import { createMessagesTable, flushDatabase } from '@/src/db';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,11 +29,21 @@ function InitialPage() {
   }, [refetch]);
 
   useEffect(() => {
+    async function initializeDatabase() {
+      await createMessagesTable();
+      // await flushDatabase();
+      console.log('SQLite messages table initialized');
+    }
+
+    initializeDatabase();
+  }, []);
+
+  useEffect(() => {
     if (isLoading) return;
 
     const inTabsGroup = segments[0] === '(tabs)';
     if (session && !inTabsGroup) {
-      router.replace('/(tabs)/chat/chat-dashboard');
+      router.replace('/(tabs)/games/battleship');
     } else if (!session) {
       router.replace('/');
     }
