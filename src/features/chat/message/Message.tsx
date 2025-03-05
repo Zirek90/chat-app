@@ -6,9 +6,9 @@ import { MessageInterface } from '../interfaces';
 import { ChatModeType } from '../types';
 import { Attachments } from './attachments';
 import { useMessageSwipe } from './useMessageSwipe.hook';
-import { COLORS } from '@/src/constants';
 import { useUserQuery, useUserProfileQuery } from '@/src/api/queries';
 import { Text, Avatar } from '@/src/components';
+import { COLORS } from '@/src/constants';
 
 interface MessageProps {
   message: MessageInterface;

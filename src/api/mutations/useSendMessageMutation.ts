@@ -25,7 +25,7 @@ export function useSendMessageMutation() {
       if (error) {
         console.error('🚀 ~ useLogoutMutation: ~ error:', error.message);
       } else {
-        await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MESSAGES] });
+        await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_CHATROOMS] });
       }
     },
   });

@@ -47,7 +47,7 @@ export async function fetchMessagesFromDb(chatroom_id: string): Promise<MessageI
     content: string;
     edited: number;
     files: string | null;
-    timestamp: number;
+    timestamp: string;
   }>(`SELECT * FROM messages WHERE chatroom_id = ? ORDER BY timestamp ASC;`, [chatroom_id]);
 
   return result.map((row) => ({
@@ -57,23 +57,21 @@ export async function fetchMessagesFromDb(chatroom_id: string): Promise<MessageI
   }));
 }
 
-//! FOR TESTING
+export async function updateMessageInDb(
+  id: string,
+  content: string,
+  edited: boolean,
+): Promise<void> {
+  const db = await getDbConnection();
+  await db.runAsync(
+    `UPDATE messages 
+     SET content = ?, edited = ? 
+     WHERE id = ?;`,
+    [content, edited ? 1 : 0, id],
+  );
+}
+
 export async function deleteMessageFromDb(messageId: string): Promise<void> {
   const db = await getDbConnection();
   await db.runAsync(`DELETE FROM messages WHERE id = ?;`, [messageId]);
-}
-
-export async function flushDatabase(): Promise<void> {
-  const db = await getDbConnection();
-  const tables = await db.getAllAsync<{ name: string }>(
-    `SELECT name FROM sqlite_master WHERE type='table';`,
-  );
-
-  for (const table of tables) {
-    const tableName = table.name;
-    if (tableName !== 'sqlite_sequence') {
-      await db.runAsync(`DELETE FROM ${tableName};`);
-    }
-  }
-  console.log('Database flushed.');
 }
