@@ -34,6 +34,9 @@ export const COLORS = {
   shadowColor: 'rgba(0, 0, 0, 0.5)',
 
   // Games
+  playerReady: '#6ed119',
+  playerNotReady: '#b80722',
+  start: '#3498db',
   shipName: '#1e1e1e',
   shipText: '#575757',
   shipPending: '#FFEB3B',

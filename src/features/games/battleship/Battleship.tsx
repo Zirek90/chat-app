@@ -1,7 +1,5 @@
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
-import { Board } from './board';
-import { Ships } from './ships';
+import { GameScreen, LobbyScreen, PlacementScreen } from './screens';
+import { useLobbyStore } from './store';
 
 interface BattleshipProps {
   user1Id: string;
@@ -9,20 +7,11 @@ interface BattleshipProps {
 }
 
 export function Battleship(props: BattleshipProps) {
+  const { gamePhase } = useLobbyStore();
   const { user1Id, user2Id } = props;
 
-  return (
-    <GestureHandlerRootView style={styles.container}>
-      <Ships />
-      <Board />
-    </GestureHandlerRootView>
-  );
-}
+  if (gamePhase === 'lobby') return <LobbyScreen playerOneId={user1Id} playerTwoId={user2Id} />;
+  if (gamePhase === 'placement') return <PlacementScreen playerId={user1Id} />;
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    padding: 10,
-  },
-});
+  return <GameScreen />;
+}

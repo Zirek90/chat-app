@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { ShipInterface } from '../../interface';
-import { useBattleshipStore } from '../../store';
+import { ShipInterface } from '../../../interface';
+import { useBattleshipStore } from '../../../store';
 import { Text } from '@/src/components';
 import { COLORS } from '@/src/constants';
 

@@ -1,9 +1,9 @@
 import { View, StyleSheet } from 'react-native';
-import { useBattleshipStore } from '../store';
 import { RemainingShips } from './remaining-ships';
 import { RorateShip } from './rotate-ship';
 import { Ship } from './ship';
 import { ShipPreview } from './ship-preview';
+import { useBattleshipStore } from '../../store';
 import { COLORS } from '@/src/constants';
 
 export function Ships() {

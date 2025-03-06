@@ -29,6 +29,7 @@ function InitialPage() {
           name="games"
           options={{
             title: 'Games',
+            headerShown: false,
             tabBarIcon: ({ size, color }) => (
               <Ionicons name="game-controller" size={size} color={color} />
             ),

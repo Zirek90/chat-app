@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { CellInterface } from '../../interface';
-import { useBattleshipStore } from '../../store';
+import { CellInterface } from '../../../interface';
+import { useBattleshipStore } from '../../../store';
 import { COLORS } from '@/src/constants';
 
 type CellProps = CellInterface;

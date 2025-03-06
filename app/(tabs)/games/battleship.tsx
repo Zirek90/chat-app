@@ -13,7 +13,7 @@ export default function BattleShipGame() {
       resizeMode="cover"
     >
       <View style={styles.container}>
-        <BattleshipGame user1Id="" user2Id="" />
+        <BattleshipGame user1Id="UserOne" user2Id="UserTwo" />
       </View>
     </ImageBackground>
   );
