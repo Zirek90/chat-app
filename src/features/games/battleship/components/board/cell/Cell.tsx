@@ -1,30 +1,21 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { CellInterface } from '../../../interface';
-import { usePlacementStore } from '../../../store';
+import { BoardSizeType } from '../../../types';
+import { getSymbol } from '../../../utils';
 import { COLORS } from '@/src/constants';
 
-type CellProps = CellInterface;
+interface CellProps extends CellInterface {
+  value: null | string;
+  onPress?: () => void;
+  size?: BoardSizeType;
+}
 
 export function Cell(props: CellProps) {
-  const { row, col } = props;
-  const grid = usePlacementStore((state) => state.grid);
-  const placeShip = usePlacementStore((state) => state.placeShip);
-  const selectedShip = usePlacementStore((state) => state.selectedShip);
-  const ships = usePlacementStore((state) => state.ships);
-
-  const handlePress = () => {
-    const ship = ships.find((ship) => ship.id === selectedShip?.id);
-    if (!ship) return;
-
-    placeShip(row, col);
-  };
+  const { row, col, value, onPress, size } = props;
 
   return (
-    <TouchableOpacity
-      style={[styles.cell, grid[row][col] && styles.isMarked]}
-      onPress={handlePress}
-    >
-      <Text>{`${String.fromCharCode(65 + row)}${col + 1}`}</Text>
+    <TouchableOpacity style={[styles.cell, size === 'mini' && styles.miniCell]} onPress={onPress}>
+      <Text>{getSymbol(value)}</Text>
     </TouchableOpacity>
   );
 }
@@ -40,7 +31,8 @@ const styles = StyleSheet.create({
     margin: 1,
     width: 30,
   },
-  isMarked: {
-    backgroundColor: COLORS.shipPlaced,
+  miniCell: {
+    height: 15,
+    width: 15,
   },
 });

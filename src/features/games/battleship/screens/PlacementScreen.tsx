@@ -12,7 +12,7 @@ interface PlacementScreenProps {
 export function PlacementScreen(props: PlacementScreenProps) {
   const { playerId } = props;
   const { markShipsPlaced, moveToNextPhase } = useLobbyStore();
-  const { remainingShips } = usePlacementStore();
+  const { remainingShips, grid, placeShip } = usePlacementStore();
 
   useEffect(() => {
     if (remainingShips === 0) {
@@ -28,7 +28,7 @@ export function PlacementScreen(props: PlacementScreenProps) {
     <View style={styles.container}>
       <Timer startBattle={handleShipsPlacement} />
       <Ships />
-      <Board />
+      <Board size="mini" gridData={grid} onCellPress={placeShip} isInteractive={true} />
       <TouchableOpacity
         style={[styles.button, remainingShips > 0 ? styles.buttonDisabled : styles.buttonEnabled]}
         onPress={handleShipsPlacement}
