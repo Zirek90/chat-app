@@ -1,11 +1,11 @@
 import { StyleSheet, View } from 'react-native';
-import { useBattleshipStore } from '../../../store';
+import { usePlacementStore } from '../../../store';
 import { Text } from '@/src/components';
 import { COLORS } from '@/src/constants';
 
 export function ShipPreview() {
-  const selectedShip = useBattleshipStore((state) => state.selectedShip);
-  const isHorizontal = useBattleshipStore((state) => state.isHorizontal);
+  const selectedShip = usePlacementStore((state) => state.selectedShip);
+  const isHorizontal = usePlacementStore((state) => state.isHorizontal);
 
   if (!selectedShip) return null;
 

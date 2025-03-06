@@ -5,10 +5,11 @@ import { GamePhaseType } from '../types';
 interface LobbyStore {
   players: Player[];
   shipsPlaced: { [key: string]: boolean };
-  moveToNextPhase: (phase: GamePhaseType) => void;
+  gamePhase: GamePhaseType;
   setPlayers: (player: Player[]) => void;
   toggleReady: (id: string) => void;
-  gamePhase: GamePhaseType;
+  moveToNextPhase: (phase: GamePhaseType) => void;
+  markShipsPlaced: (id: string) => void;
 }
 
 export const useLobbyStore = create<LobbyStore>((set, get) => ({
@@ -24,4 +25,14 @@ export const useLobbyStore = create<LobbyStore>((set, get) => ({
       ),
     })),
   moveToNextPhase: (gamePhase) => set({ gamePhase }),
+  markShipsPlaced: (id) =>
+    set((state) => {
+      const updatedShipsPlaced = { ...state.shipsPlaced, [id]: true };
+      const allPlaced = state.players.every((p) => updatedShipsPlaced[p.id]);
+
+      return {
+        shipsPlaced: updatedShipsPlaced,
+        gamePhase: allPlaced ? 'battle' : state.gamePhase,
+      };
+    }),
 }));

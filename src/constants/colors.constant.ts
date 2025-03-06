@@ -37,6 +37,7 @@ export const COLORS = {
   playerReady: '#6ed119',
   playerNotReady: '#b80722',
   start: '#3498db',
+  disabled: 'rgba(138, 138, 138, 0.6)',
   shipName: '#1e1e1e',
   shipText: '#575757',
   shipPending: '#FFEB3B',

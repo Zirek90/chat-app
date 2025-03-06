@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
-import { useBattleshipStore } from '../../../store';
+import { usePlacementStore } from '../../../store';
 import { Text } from '@/src/components';
 import { COLORS } from '@/src/constants';
 
 export function RemainingShips() {
-  const remainingShips = useBattleshipStore((state) => state.remainingShips);
+  const remainingShips = usePlacementStore((state) => state.remainingShips);
 
   return <Text style={styles.remainingShipsText}>{`Ships left to place: ${remainingShips}`}</Text>;
 }

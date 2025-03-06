@@ -3,11 +3,11 @@ import { RemainingShips } from './remaining-ships';
 import { RorateShip } from './rotate-ship';
 import { Ship } from './ship';
 import { ShipPreview } from './ship-preview';
-import { useBattleshipStore } from '../../store';
+import { usePlacementStore } from '../../store';
 import { COLORS } from '@/src/constants';
 
 export function Ships() {
-  const ships = useBattleshipStore((state) => state.ships);
+  const ships = usePlacementStore((state) => state.ships);
 
   return (
     <View style={styles.wrapper}>

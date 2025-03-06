@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { ShipInterface } from '../interface';
 
-interface BattleshipStore {
+interface PlacementStore {
   grid: (null | string)[][];
   ships: ShipInterface[];
   remainingShips: number;
@@ -19,7 +19,7 @@ interface BattleshipStore {
   ) => boolean;
 }
 
-export const useBattleshipStore = create<BattleshipStore>((set, get) => ({
+export const usePlacementStore = create<PlacementStore>((set, get) => ({
   grid: Array(10)
     .fill(null)
     .map(() => Array(10).fill(null)),

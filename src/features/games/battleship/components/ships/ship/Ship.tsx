@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ShipInterface } from '../../../interface';
-import { useBattleshipStore } from '../../../store';
+import { usePlacementStore } from '../../../store';
 import { Text } from '@/src/components';
 import { COLORS } from '@/src/constants';
 
@@ -8,9 +8,9 @@ type ShipProps = ShipInterface;
 
 export function Ship(props: ShipProps) {
   const { id, name, size, placed } = props;
-  const selectedShip = useBattleshipStore((state) => state.selectedShip);
-  const setSelectedShip = useBattleshipStore((state) => state.setSelectedShip);
-  const unplaceShip = useBattleshipStore((state) => state.unplaceShip);
+  const selectedShip = usePlacementStore((state) => state.selectedShip);
+  const setSelectedShip = usePlacementStore((state) => state.setSelectedShip);
+  const unplaceShip = usePlacementStore((state) => state.unplaceShip);
 
   return (
     <TouchableOpacity

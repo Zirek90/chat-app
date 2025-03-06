@@ -1,2 +1,2 @@
-export * from './useBattleshipStore';
+export * from './usePlacementStore';
 export * from './useLobbyStore';

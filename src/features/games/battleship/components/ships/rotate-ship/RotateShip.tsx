@@ -1,10 +1,10 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { useBattleshipStore } from '../../../store';
+import { usePlacementStore } from '../../../store';
 import { Text } from '@/src/components';
 import { COLORS } from '@/src/constants';
 
 export function RorateShip() {
-  const toggleRotation = useBattleshipStore((state) => state.toggleRotation);
+  const toggleRotation = usePlacementStore((state) => state.toggleRotation);
 
   return (
     <TouchableOpacity style={styles.rotateButton} onPress={toggleRotation}>
