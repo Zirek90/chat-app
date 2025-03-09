@@ -1,3 +1,3 @@
 export * from './LobbyScreen';
 export * from './PlacementScreen';
-export * from './GameScreen';
+export * from './BattleScreen';

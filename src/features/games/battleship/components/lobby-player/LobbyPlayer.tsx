@@ -1,15 +1,17 @@
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Player } from '../../interface';
+import { useUserQuery } from '@/src/api/queries';
 import { Text } from '@/src/components';
 import { COLORS } from '@/src/constants';
 
 interface LobbyPlayerProps {
-  toggleReady: (id: string) => void;
+  togglePlayerReady: (player: Player) => void;
   player: Player;
 }
 
 export function LobbyPlayer(props: LobbyPlayerProps) {
-  const { toggleReady, player } = props;
+  const { togglePlayerReady, player } = props;
+  const { data: user } = useUserQuery();
 
   return (
     <View style={styles.playerCard}>
@@ -17,8 +19,9 @@ export function LobbyPlayer(props: LobbyPlayerProps) {
         {player.name} {player.ready ? '✅' : '❌'}
       </Text>
       <TouchableOpacity
+        disabled={user?.id !== player.id || player.ready}
         style={[styles.button, player.ready ? styles.readyButton : styles.notReadyButton]}
-        onPress={() => toggleReady(player.id)}
+        onPress={() => togglePlayerReady(player)}
       >
         <Text style={styles.buttonText}>{player.ready ? 'Unready' : 'Ready'}</Text>
       </TouchableOpacity>
