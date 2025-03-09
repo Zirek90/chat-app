@@ -1,15 +1,16 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { useMemo, useState, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { Player } from '../../interface';
 import { GamePhaseType } from '../../types';
+import { Text } from '@/src/components';
 
-interface StartGameButtonProps {
+interface CountdownTimerProps {
   players: Player[];
-  moveToNextPhase: (page: GamePhaseType) => void;
+  moveToNextPhase: (phase: GamePhaseType) => void;
+  nextPhase: GamePhaseType;
 }
 
-export function StartGameButton(props: StartGameButtonProps) {
-  const { players, moveToNextPhase } = props;
+export function CountdownTimer({ players, moveToNextPhase, nextPhase }: CountdownTimerProps) {
   const readyPlayers = useMemo(() => players.filter((player) => player.ready), [players]);
   const [countdown, setCountdown] = useState<number | null>(null);
 
@@ -24,24 +25,20 @@ export function StartGameButton(props: StartGameButtonProps) {
   useEffect(() => {
     if (countdown === null || countdown <= 0) return;
 
-    const timer = setTimeout(() => {
-      setCountdown((prev) => (prev ? prev - 1 : 0));
-    }, 1000);
+    const timer = setTimeout(() => setCountdown((prev) => (prev ? prev - 1 : 0)), 1000);
 
     return () => clearTimeout(timer);
   }, [countdown]);
 
   useEffect(() => {
     if (countdown === 0) {
-      moveToNextPhase('placement');
+      moveToNextPhase(nextPhase);
     }
-  }, [countdown, moveToNextPhase]);
+  }, [countdown, moveToNextPhase, nextPhase]);
 
-  return (
-    readyPlayers.length === 2 && (
-      <Text style={styles.countdownText}>Game starting in {countdown} seconds...</Text>
-    )
-  );
+  if (readyPlayers.length !== 2 || countdown === null) return null;
+
+  return <Text style={styles.countdownText}>Game starting in {countdown} seconds...</Text>;
 }
 
 const styles = StyleSheet.create({

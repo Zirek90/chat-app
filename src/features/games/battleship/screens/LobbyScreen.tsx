@@ -1,15 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { PlayerList } from '../components/player-list';
-import { RoomControls } from '../components/room-controls';
-import { StartGameButton } from '../components/start-game-button';
+import { CountdownTimer, PlayerList, RoomControls } from '../components';
 import { GameEvent } from '../enums';
-import { Player } from '../interface';
 import {
+  Player,
   PlayerReadyPayload,
   PlayerJoinedPayload,
   PlayerListUpdatePayload,
-} from '../interface/game-payload.interface';
+} from '../interface';
 import { useLobbyStore } from '../store';
 import { API } from '@/src/api/api';
 import { useUserQuery } from '@/src/api/queries';
@@ -76,7 +74,7 @@ export function LobbyScreen() {
 
       <PlayerList players={players} togglePlayerReady={handleToggle} />
 
-      <StartGameButton players={players} moveToNextPhase={moveToNextPhase} />
+      <CountdownTimer players={players} moveToNextPhase={moveToNextPhase} nextPhase="placement" />
     </View>
   );
 }
