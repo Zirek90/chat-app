@@ -1,41 +1,34 @@
-import { useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Ships, Board, Timer } from '../components';
 import { useLobbyStore, usePlacementStore } from '../store';
-import { Text } from '@/src/components';
+import { API } from '@/src/api/api';
+import { useUserQuery } from '@/src/api/queries';
 import { COLORS } from '@/src/constants';
 
-interface PlacementScreenProps {
-  playerId: string;
-}
-
-export function PlacementScreen(props: PlacementScreenProps) {
-  const { playerId } = props;
-  const { markShipsPlaced, moveToNextPhase } = useLobbyStore();
+export function PlacementScreen() {
+  const { data: user } = useUserQuery();
+  const { markShipsPlaced, shipsPlaced, roomId } = useLobbyStore();
   const { remainingShips, grid, placeShip } = usePlacementStore();
 
-  useEffect(() => {
-    if (remainingShips === 0) {
-      markShipsPlaced(playerId);
-    }
-  }, [remainingShips, markShipsPlaced, playerId]);
-
   const handleShipsPlacement = () => {
-    moveToNextPhase('battle');
+    if (!user || !roomId || remainingShips > 0) return;
+    if (shipsPlaced[user.id]) return;
+
+    markShipsPlaced(user.id);
+    API.game.sendShipsPlaced(roomId, user.id, user.username, grid as string[][]);
   };
 
   return (
     <View style={styles.container}>
       <Timer startBattle={handleShipsPlacement} />
       <Ships />
-      <Board size="mini" gridData={grid} onCellPress={placeShip} isInteractive={true} />
-      <TouchableOpacity
-        style={[styles.button, remainingShips > 0 ? styles.buttonDisabled : styles.buttonEnabled]}
-        onPress={handleShipsPlacement}
-        disabled={Boolean(remainingShips)}
-      >
-        <Text style={styles.buttonText}>Finish Placement</Text>
-      </TouchableOpacity>
+      <Board
+        size="full"
+        gridData={grid}
+        onCellPress={placeShip}
+        isInteractive={true}
+        boardTitle=""
+      />
     </View>
   );
 }
@@ -45,23 +38,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     padding: 10,
-  },
-  button: {
-    width: '80%',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonEnabled: {
-    backgroundColor: COLORS.start,
-  },
-  buttonDisabled: {
-    backgroundColor: COLORS.disabled,
-  },
-  buttonText: {
-    color: COLORS.white,
-    fontSize: 16,
-    fontWeight: 'bold',
+    backgroundColor: COLORS.overlay,
   },
 });

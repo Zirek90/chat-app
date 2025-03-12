@@ -1,61 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { CountdownTimer, PlayerList, RoomControls } from '../components';
-import { GameEvent } from '../enums';
-import {
-  Player,
-  PlayerReadyPayload,
-  PlayerJoinedPayload,
-  PlayerListUpdatePayload,
-} from '../interface';
+import { Player } from '../interface';
 import { useLobbyStore } from '../store';
 import { API } from '@/src/api/api';
-import { useUserQuery } from '@/src/api/queries';
 import { COLORS } from '@/src/constants';
 
 export function LobbyScreen() {
-  const { data: user } = useUserQuery();
   const { players, updatePlayers, moveToNextPhase, togglePlayerReady, roomId, setRoomId } =
     useLobbyStore();
   const [inputRoomId, setInputRoomId] = useState('');
-
-  const handleRoomEvent = useCallback(
-    (
-      event: GameEvent,
-      payload: PlayerReadyPayload | PlayerJoinedPayload | PlayerListUpdatePayload,
-    ) => {
-      switch (event) {
-        case GameEvent.PLAYER_READY:
-          const { id: readyId, name: readyName } = payload as PlayerReadyPayload;
-
-          updatePlayers({ id: readyId, name: readyName, ready: true });
-          break;
-        case GameEvent.PLAYER_JOINED:
-          const { id: joinedId, name: joinedName } = payload as PlayerJoinedPayload;
-
-          updatePlayers({ id: joinedId, name: joinedName, ready: false });
-          break;
-        case GameEvent.PLAYER_LIST_SYNC:
-          const { players } = payload as PlayerListUpdatePayload;
-
-          players.forEach(updatePlayers);
-          break;
-        default:
-          console.warn('Unknown event received:', event);
-      }
-    },
-    [updatePlayers],
-  );
-
-  useEffect(() => {
-    if (!roomId || !user) return;
-
-    const battleshipEvents = API.game.subscribeBattleshipGameEvents(roomId, handleRoomEvent);
-
-    return () => {
-      battleshipEvents.unsubscribe().catch((err) => console.error('Error unsubscribing:', err));
-    };
-  }, [roomId, handleRoomEvent, players, user]);
+  const readyPlayers = useMemo(() => players.filter((player) => player.ready), [players]);
 
   function handleToggle(player: Player) {
     togglePlayerReady(player);
@@ -74,7 +29,11 @@ export function LobbyScreen() {
 
       <PlayerList players={players} togglePlayerReady={handleToggle} />
 
-      <CountdownTimer players={players} moveToNextPhase={moveToNextPhase} nextPhase="placement" />
+      <CountdownTimer
+        readyPlayers={readyPlayers}
+        moveToNextPhase={moveToNextPhase}
+        nextPhase="placement"
+      />
     </View>
   );
 }

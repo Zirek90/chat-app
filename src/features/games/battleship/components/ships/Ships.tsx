@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.shipWrapper,
     borderRadius: 12,
     elevation: 4,
-    marginBottom: 10,
+    marginBottom: 5,
     paddingVertical: 10,
     paddingHorizontal: 5,
     shadowColor: COLORS.black,

@@ -25,14 +25,15 @@ export function RoomControls(props: RoomControlsProps) {
     setRoomId(inputRoomId);
   };
 
+  const copyId = async () => {
+    await Clipboard.setStringAsync(roomId!);
+  };
+
   if (roomId) {
     return (
       <>
         <Text style={styles.title}>Room ID: {roomId}</Text>
-        <TouchableOpacity
-          onPress={() => Clipboard.setStringAsync(roomId)}
-          style={styles.copyButton}
-        >
+        <TouchableOpacity onPress={copyId} style={styles.copyButton}>
           <Text style={styles.copyButtonText}>Copy Room ID</Text>
         </TouchableOpacity>
       </>

@@ -53,13 +53,7 @@ export const useLobbyStore = create<LobbyStore>((set) => ({
     }),
   moveToNextPhase: (gamePhase) => set({ gamePhase }),
   markShipsPlaced: (id) =>
-    set((state) => {
-      const updatedShipsPlaced = { ...state.shipsPlaced, [id]: true };
-      const allPlaced = state.players.every((p) => updatedShipsPlaced[p.id]);
-
-      return {
-        shipsPlaced: updatedShipsPlaced,
-        gamePhase: allPlaced ? 'battle' : state.gamePhase,
-      };
-    }),
+    set((state) => ({
+      shipsPlaced: { ...state.shipsPlaced, [id]: true },
+    })),
 }));

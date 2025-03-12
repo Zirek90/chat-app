@@ -5,13 +5,12 @@ import { GamePhaseType } from '../../types';
 import { Text } from '@/src/components';
 
 interface CountdownTimerProps {
-  players: Player[];
+  readyPlayers: Player[];
   moveToNextPhase: (phase: GamePhaseType) => void;
   nextPhase: GamePhaseType;
 }
 
-export function CountdownTimer({ players, moveToNextPhase, nextPhase }: CountdownTimerProps) {
-  const readyPlayers = useMemo(() => players.filter((player) => player.ready), [players]);
+export function CountdownTimer({ readyPlayers, moveToNextPhase, nextPhase }: CountdownTimerProps) {
   const [countdown, setCountdown] = useState<number | null>(null);
 
   useEffect(() => {
